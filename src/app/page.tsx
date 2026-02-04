@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Volume2, Box, Zap, Fingerprint, Lock } from "lucide-react";
+import { Box, Zap, Fingerprint, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -41,10 +41,6 @@ export default function Home() {
                 WITHOUT $10K IN VINTAGE GEAR. <br />
                 GET THE TEXTURE AND WARMTH YOU CAN'T RECREATE YOURSELF.
               </p>
-            </div>
-
-            <div className="py-8">
-              <Volume2 size={48} strokeWidth={3} className="text-foreground" />
             </div>
 
             <Button asChild className="bg-black text-primary hover:bg-black/90 rounded-full h-12 px-12 text-2xl font-black italic tracking-tighter uppercase border-none group">

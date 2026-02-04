@@ -44,7 +44,7 @@ export function Header() {
       <div className="container mx-auto px-4 flex h-14 items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image 
-            src="/logoT.png" 
+            src="/logoT.webp" 
             alt="Sonicrate Logo" 
             width={32} 
             height={32} 

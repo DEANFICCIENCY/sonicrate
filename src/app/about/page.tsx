@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Image from "next/image";
-import { Volume2, Box, Zap, Fingerprint, Lock } from "lucide-react";
+import { Box, Zap, Fingerprint, Lock } from "lucide-react";
 
 export default function AboutPage() {
   const manifesto = [
@@ -74,10 +74,6 @@ export default function AboutPage() {
                   </p>
                 </div>
               ))}
-            </div>
-
-            <div className="pt-8">
-              <Volume2 size={48} strokeWidth={3} className="text-black" />
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Youtube, Instagram, Music2, ChevronRight, Volume2 } from "lucide-react";
+import { Youtube, Instagram, Music2, ChevronRight } from "lucide-react";
 
 export function Footer() {
   return (
@@ -40,10 +40,6 @@ export function Footer() {
              <div className="flex flex-col gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
               <Link href="/license" className="hover:text-white transition-colors">CREATIVE RIGHTS (license agreement)</Link>
               <Link href="/privacy" className="hover:text-white transition-colors">YOUR PRIVACY (privacy policy)</Link>
-            </div>
-
-            <div className="p-4 bg-primary text-black rounded-full shadow-[0_0_20px_rgba(215,255,0,0.3)]">
-              <Volume2 size={32} strokeWidth={3} />
             </div>
 
             <div className="flex flex-col gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
