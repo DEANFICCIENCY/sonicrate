@@ -25,12 +25,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 
 export function Header() {
-  const { auth } = useAuth();
+  const auth = useAuth();
   const { user, loading } = useUser();
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const handleSignIn = async () => {
-    if (!auth) return;
+    if (!auth) {
+      console.error("Firebase Auth is not initialized.");
+      return;
+    }
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
