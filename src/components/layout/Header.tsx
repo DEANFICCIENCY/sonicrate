@@ -28,18 +28,26 @@ export function Header() {
   const auth = useAuth();
   const { user, loading } = useUser();
   const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleSignIn = async () => {
-    if (!auth) {
-      console.error("Firebase Auth is not initialized.");
+    if (!auth || isSigningIn) {
+      if (!auth) console.error("Firebase Auth is not initialized.");
       return;
     }
+
+    setIsSigningIn(true);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
       setIsSignInOpen(false);
-    } catch (error) {
-      console.error("Error signing in with Google:", error);
+    } catch (error: any) {
+      // Quietly handle standard cancellation errors
+      if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+        console.error("Error signing in with Google:", error);
+      }
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -131,9 +139,10 @@ export function Header() {
                     <div className="flex flex-col gap-6">
                       <button 
                         onClick={handleSignIn}
-                        className="w-full h-20 border-[3px] border-black flex items-center justify-center text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 hover:text-white transition-all focus:border-blue-600 outline-none"
+                        disabled={isSigningIn}
+                        className="w-full h-20 border-[3px] border-black flex items-center justify-center text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 hover:text-white transition-all focus:border-blue-600 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        GOOGLE
+                        {isSigningIn ? "SIGNING IN..." : "GOOGLE"}
                       </button>
                       
                       <button className="w-full h-20 border-[3px] border-black flex items-center justify-center gap-4 text-3xl font-black italic uppercase tracking-tighter hover:bg-black hover:text-white transition-all outline-none">
