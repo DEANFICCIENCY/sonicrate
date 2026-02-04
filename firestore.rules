@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * FIRESTORE SECURITY RULES - PROTOTYPING MODE
+     * 
+     * Core Philosophy:
+     * This ruleset implements a strict User-Ownership model. Access is restricted to 
+     * authenticated users (including anonymous sessions) managing their own subscription 
+     * data. This ensures that while any user can subscribe, they can only view or 
+     * modify their own subscription status.
+     * 
+     * Data Structure:
+     * The primary data resides in the `/emails` collection. To satisfy the requirement 
+     * of hiding UI elements based on personal subscription status, the system 
+     * identifies documents by a unique ID that must correspond to the user's 
+     * authenticated UID.
+     * 
+     * Key Security Decisions:
+     * 1. Ownership Enforcement: No user can list or read another user's email or 
+     *    subscription status. This is achieved by binding the document ID (`emailId`) 
+     *    to the User's UID.
+     * 2. Identity source: All decisions rely on `request.auth`.
+     * 3. Prototyping Flexibility: While ownership is strictly enforced, the specific 
+     *    content fields (like the email string format) are not validated here to 
+     *    allow for rapid front-end iteration.
+     * 4. Relational Integrity: On creation, we ensure the document's internal `id` 
+     *    matches the path ID to prevent data-path mismatches.
+     * 
+     * Denormalization for Authorization:
+     * The `id` field within the document is treated as the primary key and ownership 
+     * link, matching the Firestore document ID to avoid additional lookups.
+     */
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    /** @description Checks if the user is authenticated with any provider. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the provided ID matches the authenticated user's UID. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Checks ownership and ensures the document actually exists. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    // --- COLLECTION RULES ---
+
+    match /emails/{emailId} {
+      
+      /**
+       * @description Rules for managing user newsletter subscriptions.
+       * @path /emails/{emailId}
+       * @allow (get) If the user is the owner of the email record.
+       * @allow (create) If the user is authenticated and the record's ID matches their UID.
+       * @deny (list) If the user attempts to list emails that are not their own.
+       * @principle Ownership-based access control with relational integrity enforcement.
+       */
+
+      allow get: if isOwner(emailId);
+      
+      // List is allowed but Firestore will only return results where the user is the owner.
+      allow list: if isOwner(emailId);
+
+      allow create: if isOwner(emailId) && request.resource.data.id == emailId;
+
+      allow update: if isExistingOwner(emailId) && request.resource.data.id == resource.data.id;
+
+      allow delete: if isExistingOwner(emailId);
+    }
+
+    // --- DEFAULT DENY ---
+    // Explicitly deny access to any other collections not defined above.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
