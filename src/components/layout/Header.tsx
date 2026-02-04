@@ -14,17 +14,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
 
 export function Header() {
   const { auth } = useAuth();
   const { user, loading } = useUser();
+  const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   const handleSignIn = async () => {
     if (!auth) return;
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+      setIsSignInOpen(false);
     } catch (error) {
       console.error("Error signing in with Google:", error);
     }
@@ -71,49 +80,58 @@ export function Header() {
           </div>
 
           {!loading && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="outline-none">
-                {user ? (
+            user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="outline-none">
                   <Avatar className="h-8 w-8 border-2 border-black">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
                     <AvatarFallback className="bg-black text-primary font-black text-xs uppercase italic">
                       {user.displayName?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
-                ) : (
-                  <User size={24} className="text-black cursor-pointer hover:opacity-70 transition-opacity" />
-                )}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                {user ? (
-                  <>
-                    <DropdownMenuLabel className="font-black italic uppercase tracking-tighter border-b border-black/10 py-3">
-                      {user.displayName || "MY ACCOUNT"}
-                    </DropdownMenuLabel>
-                    <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
-                      PURCHASES
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
-                      PROFILE SETTINGS
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator className="bg-black/10" />
-                    <DropdownMenuItem 
-                      onClick={handleSignOut}
-                      className="cursor-pointer font-black italic uppercase text-xs tracking-tighter text-red-600 hover:bg-red-50 transition-colors py-3"
-                    >
-                      LOG OUT
-                    </DropdownMenuItem>
-                  </>
-                ) : (
-                  <DropdownMenuItem 
-                    onClick={handleSignIn}
-                    className="cursor-pointer font-black italic uppercase text-sm tracking-tighter py-4 text-center justify-center hover:bg-primary transition-colors"
-                  >
-                    SIGN IN WITH GOOGLE
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <DropdownMenuLabel className="font-black italic uppercase tracking-tighter border-b border-black/10 py-3">
+                    {user.displayName || "MY ACCOUNT"}
+                  </DropdownMenuLabel>
+                  <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
+                    PURCHASES
                   </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
+                    PROFILE SETTINGS
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-black/10" />
+                  <DropdownMenuItem 
+                    onClick={handleSignOut}
+                    className="cursor-pointer font-black italic uppercase text-xs tracking-tighter text-red-600 hover:bg-red-50 transition-colors py-3"
+                  >
+                    LOG OUT
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Dialog open={isSignInOpen} onOpenChange={setIsSignInOpen}>
+                <DialogTrigger asChild>
+                  <User size={24} className="text-black cursor-pointer hover:opacity-70 transition-opacity" />
+                </DialogTrigger>
+                <DialogContent className="max-w-[400px] p-0 border-none bg-transparent shadow-none overflow-visible">
+                  <div className="relative">
+                    {/* Blue horizontal bar decoration as per mockup */}
+                    <div className="absolute top-1/2 left-[-100px] right-[-100px] h-12 bg-blue-600 -translate-y-1/2 -z-10" />
+                    
+                    <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">
+                      <DialogTitle className="sr-only">Sign In</DialogTitle>
+                      <button 
+                        onClick={handleSignIn}
+                        className="w-full text-2xl font-black italic uppercase tracking-tighter text-black hover:opacity-70 transition-opacity py-4"
+                      >
+                        SIGN IN WITH GOOGLE
+                      </button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )
           )}
         </div>
       </div>
