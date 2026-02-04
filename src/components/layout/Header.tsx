@@ -35,6 +35,8 @@ export function Header() {
       await signInWithPopup(auth, provider);
       setIsSignInOpen(false);
     } catch (error) {
+      // Errors are handled by the global listener if configured, 
+      // otherwise logged for dev visibility
       console.error("Error signing in with Google:", error);
     }
   };
