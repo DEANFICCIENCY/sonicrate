@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, User, Mail, Apple } from "lucide-react";
+import { ShoppingBag, User, Apple, X } from "lucide-react";
 import { useAuth, useUser } from "@/firebase";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import {
@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
@@ -35,8 +36,6 @@ export function Header() {
       await signInWithPopup(auth, provider);
       setIsSignInOpen(false);
     } catch (error) {
-      // Errors are handled by the global listener if configured, 
-      // otherwise logged for dev visibility
       console.error("Error signing in with Google:", error);
     }
   };
@@ -116,38 +115,44 @@ export function Header() {
                 <DialogTrigger asChild>
                   <User size={24} className="text-black cursor-pointer hover:opacity-70 transition-opacity" />
                 </DialogTrigger>
-                <DialogContent className="max-w-[400px] p-0 border-none bg-transparent shadow-none overflow-visible">
-                  <div className="bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col gap-4">
-                    <DialogTitle className="text-3xl font-black italic uppercase tracking-tighter text-black text-center mb-4">
+                <DialogContent className="max-w-[440px] p-0 border-none bg-transparent shadow-none overflow-visible">
+                  <div className="bg-white border-[6px] border-black p-12 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] relative">
+                    <DialogClose className="absolute right-6 top-6 hover:opacity-60 transition-opacity">
+                      <X size={24} className="text-black" strokeWidth={3} />
+                    </DialogClose>
+                    
+                    <DialogTitle className="text-6xl font-black italic uppercase tracking-tighter text-black text-center mb-12">
                       SIGN IN
                     </DialogTitle>
                     
-                    <button 
-                      onClick={handleSignIn}
-                      className="w-full border-2 border-black py-4 flex items-center justify-center gap-3 text-xl font-black italic uppercase tracking-tighter hover:bg-primary transition-colors"
-                    >
-                      GOOGLE
-                    </button>
-                    
-                    <button className="w-full border-2 border-black py-4 flex items-center justify-center gap-3 text-xl font-black italic uppercase tracking-tighter hover:bg-black hover:text-white transition-colors">
-                      <Apple size={20} />
-                      APPLE
-                    </button>
-
-                    <div className="relative py-4">
-                      <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-black/10" /></div>
-                      <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest bg-white px-2">OR</div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <input 
-                        type="email" 
-                        placeholder="EMAIL" 
-                        className="w-full border-2 border-black p-4 font-black italic uppercase placeholder:text-black/30 outline-none focus:bg-primary/5"
-                      />
-                      <button className="w-full bg-black text-white py-4 text-xl font-black italic uppercase tracking-tighter hover:bg-primary hover:text-black transition-colors">
-                        CONTINUE
+                    <div className="flex flex-col gap-6">
+                      <button 
+                        onClick={handleSignIn}
+                        className="w-full h-20 border-[3px] border-black flex items-center justify-center text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 hover:text-white transition-all focus:border-blue-600 outline-none"
+                      >
+                        GOOGLE
                       </button>
+                      
+                      <button className="w-full h-20 border-[3px] border-black flex items-center justify-center gap-4 text-3xl font-black italic uppercase tracking-tighter hover:bg-black hover:text-white transition-all outline-none">
+                        <Apple size={32} />
+                        APPLE
+                      </button>
+
+                      <div className="flex items-center justify-center py-6">
+                        <span className="text-xs font-black uppercase tracking-widest bg-white px-4 z-10">OR</span>
+                        <div className="absolute w-full h-[1px] bg-black/10 left-0" />
+                      </div>
+
+                      <div className="space-y-6">
+                        <input 
+                          type="email" 
+                          placeholder="EMAIL" 
+                          className="w-full h-20 border-[3px] border-black px-8 text-2xl font-black italic uppercase placeholder:text-black/20 outline-none focus:border-blue-600"
+                        />
+                        <button className="w-full h-20 bg-black text-white text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 transition-all">
+                          CONTINUE
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </DialogContent>
