@@ -81,7 +81,7 @@ export default function ContactPage() {
               />
               
               <div className="flex justify-center pt-8">
-                <button type="submit" className="bg-black text-primary px-16 py-4 rounded-full text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                <button type="submit" className="bg-black text-primary px-16 py-4 rounded-full text-3xl font-black italic uppercase tracking-tighter hover:bg-black/90 transition-all">
                   SEND
                 </button>
               </div>
