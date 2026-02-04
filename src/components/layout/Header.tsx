@@ -11,15 +11,15 @@ export function Header() {
           <Grid size={24} className="text-black" />
         </div>
 
-        <nav className="flex items-center space-x-2 md:space-x-4 text-[10px] font-black uppercase tracking-[0.2em] text-black">
+        <nav className="flex items-center gap-1 md:gap-4 text-[11px] font-black uppercase tracking-[0.1em] text-black">
           <Link href="/" className="hover:opacity-60 transition-opacity">HOME</Link>
-          <span className="opacity-20">·</span>
+          <span className="opacity-40 select-none">•</span>
           <Link href="/packs" className="hover:opacity-60 transition-opacity">PACKS</Link>
-          <span className="opacity-20">·</span>
+          <span className="opacity-40 select-none">•</span>
           <Link href="/free" className="hover:opacity-60 transition-opacity">FREE</Link>
-          <span className="opacity-20">·</span>
+          <span className="opacity-40 select-none">•</span>
           <Link href="/about" className="hover:opacity-60 transition-opacity">ABOUT</Link>
-          <span className="opacity-20">·</span>
+          <span className="opacity-40 select-none">•</span>
           <Link href="/contact" className="hover:opacity-60 transition-opacity">CONTACT</Link>
         </nav>
 
