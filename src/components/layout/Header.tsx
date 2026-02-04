@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from "next/link";
@@ -31,16 +30,13 @@ export function Header() {
   const { toast } = useToast();
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = async () => {
-    if (!auth || isSigningIn) {
-      if (!auth) console.error("Firebase Auth is not initialized.");
-      return;
-    }
-
+  const handleGoogleSignIn = async () => {
+    if (!auth || isSigningIn) return;
     setIsSigningIn(true);
     const provider = new GoogleAuthProvider();
     try {
@@ -61,31 +57,25 @@ export function Header() {
 
   const handleEmailAuth = async () => {
     if (!auth || !email || !password || isSigningIn) return;
-    
     setIsSigningIn(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
       setIsSignInOpen(false);
     } catch (error: any) {
-      // If user doesn't exist, attempt to create account
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          setIsSignInOpen(false);
-        } catch (createError: any) {
-          toast({
-            variant: "destructive",
-            title: "AUTH ERROR",
-            description: createError.message.toUpperCase(),
-          });
-        }
-      } else {
-        toast({
-          variant: "destructive",
-          title: "AUTH ERROR",
-          description: error.message.toUpperCase(),
-        });
-      }
+      let message = error.message;
+      if (error.code === 'auth/invalid-credential') message = "INVALID EMAIL OR PASSWORD";
+      if (error.code === 'auth/email-already-in-use') message = "EMAIL ALREADY IN USE";
+      if (error.code === 'auth/weak-password') message = "PASSWORD IS TOO WEAK";
+      
+      toast({
+        variant: "destructive",
+        title: "AUTH ERROR",
+        description: message.toUpperCase(),
+      });
     } finally {
       setIsSigningIn(false);
     }
@@ -173,16 +163,16 @@ export function Header() {
                     </DialogClose>
                     
                     <DialogTitle className="text-6xl font-black italic uppercase tracking-tighter text-black text-center mb-12">
-                      SIGN IN
+                      {isSignUp ? "SIGN UP" : "SIGN IN"}
                     </DialogTitle>
                     
                     <div className="flex flex-col gap-6">
                       <button 
-                        onClick={handleSignIn}
+                        onClick={handleGoogleSignIn}
                         disabled={isSigningIn}
                         className="w-full h-20 border-[3px] border-black flex items-center justify-center text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 hover:text-white transition-all focus:border-blue-600 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {isSigningIn ? "SIGNING IN..." : "GOOGLE"}
+                        {isSigningIn ? "..." : "GOOGLE"}
                       </button>
                       
                       <button className="w-full h-20 border-[3px] border-black flex items-center justify-center gap-4 text-3xl font-black italic uppercase tracking-tighter hover:bg-black hover:text-white transition-all outline-none">
@@ -190,9 +180,9 @@ export function Header() {
                         APPLE
                       </button>
 
-                      <div className="flex items-center justify-center py-6">
-                        <span className="text-xs font-black uppercase tracking-widest bg-white px-4 z-10">OR</span>
-                        <div className="absolute w-full h-[1px] bg-black/10 left-0" />
+                      <div className="relative flex items-center justify-center py-6">
+                        <div className="absolute w-full h-[1px] bg-black/10" />
+                        <span className="relative text-xs font-black uppercase tracking-widest bg-white px-4">OR</span>
                       </div>
 
                       <div className="space-y-4">
@@ -218,6 +208,13 @@ export function Header() {
                           {isSigningIn ? "..." : "CONTINUE"}
                         </button>
                       </div>
+
+                      <button 
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        className="text-[10px] font-black uppercase tracking-widest hover:text-blue-600 transition-colors mt-4"
+                      >
+                        {isSignUp ? "ALREADY HAVE AN ACCOUNT? SIGN IN" : "NEED AN ACCOUNT? SIGN UP"}
+                      </button>
                     </div>
                   </div>
                 </DialogContent>
