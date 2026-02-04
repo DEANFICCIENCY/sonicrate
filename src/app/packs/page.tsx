@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Box, Zap, Fingerprint, Lock, Plus } from "lucide-react";
+import { Box, Zap, Fingerprint, Lock, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -120,15 +120,21 @@ export default function PacksPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
               {suggestedPacks.map((pack) => (
-                <div key={pack.id} className="group bg-white rounded-[4rem] p-10 text-black flex flex-col items-center space-y-8 transition-transform hover:-translate-y-2 duration-300">
-                  <Link href={`/packs`} className="w-full space-y-8 flex flex-col items-center">
-                    <div className="relative w-full aspect-square overflow-hidden shadow-sm">
+                <div key={pack.id} className="group bg-white rounded-[4rem] p-10 text-black flex flex-col items-center transition-transform hover:-translate-y-2 duration-300">
+                  <Link href={`/packs`} className="w-full flex flex-col items-center">
+                    <div className="relative w-full aspect-square overflow-hidden shadow-sm mb-8">
                       <Image 
                         src={pack.imageUrl} 
                         alt={pack.title} 
                         fill 
                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
                       />
+                      {/* Red Dot Cart Icon */}
+                      <div className="absolute top-4 left-4 h-8 w-8 bg-[#FF0000] rounded-full flex items-center justify-center text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10">
+                        <ShoppingBag size={14} strokeWidth={3} />
+                      </div>
+                      
+                      {/* Save badge */}
                       <div className="absolute top-4 right-4 bg-primary px-4 py-1.5 text-[11px] font-black border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase">
                         SAVE ${pack.save}
                       </div>
@@ -139,16 +145,12 @@ export default function PacksPage() {
                       <h4 className="font-black text-3xl uppercase tracking-tighter leading-none">{pack.title.split('|')[1]}</h4>
                       <p className="text-[10px] font-bold opacity-30 uppercase tracking-[0.2em] pt-2">{pack.category}</p>
                       
-                      <div className="flex justify-center items-center gap-4 pt-4">
+                      <div className="flex justify-center items-center gap-4 pt-4 pb-8">
                         <span className="text-5xl font-black text-blue-600">${pack.price}</span>
                         <span className="text-4xl font-bold line-through opacity-10">${pack.oldPrice}</span>
                       </div>
                     </div>
                   </Link>
-
-                  <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-full h-16 text-xl font-black uppercase tracking-tighter italic transition-all group-hover:scale-[1.02]">
-                    ADD TO CART <Plus className="ml-2 h-5 w-5 stroke-[4px]" />
-                  </Button>
                 </div>
               ))}
             </div>
