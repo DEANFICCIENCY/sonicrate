@@ -1,15 +1,23 @@
 "use client"
 
 import Link from "next/link";
-import { Grid, ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import { ShoppingBag } from "lucide-react";
 
 export function Header() {
   return (
     <header className="w-full bg-primary border-b border-black sticky top-0 z-50">
       <div className="container mx-auto px-4 flex h-14 items-center justify-between">
-        <div className="flex items-center">
-          <Grid size={24} className="text-black" />
-        </div>
+        <Link href="/" className="flex items-center">
+          <Image 
+            src="/logoT.png" 
+            alt="Sonicrate Logo" 
+            width={32} 
+            height={32} 
+            className="object-contain"
+            priority
+          />
+        </Link>
 
         <nav className="flex items-center gap-1 md:gap-4 text-[11px] font-black uppercase tracking-[0.1em] text-black">
           <Link href="/" className="hover:opacity-60 transition-opacity">HOME</Link>
@@ -24,7 +32,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center">
-          <ShoppingBag size={24} className="text-black" />
+          <ShoppingBag size={24} className="text-black cursor-pointer hover:opacity-70 transition-opacity" />
         </div>
       </div>
     </header>
