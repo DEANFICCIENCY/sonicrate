@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
+import { CookieBanner } from '@/components/layout/CookieBanner';
 
 export const metadata: Metadata = {
   title: 'SONICRATE | PRODUCER-FIRST PLATFORM',
@@ -24,6 +25,7 @@ export default function RootLayout({
         <FirebaseClientProvider>
           {children}
           <Toaster />
+          <CookieBanner />
         </FirebaseClientProvider>
       </body>
     </html>
