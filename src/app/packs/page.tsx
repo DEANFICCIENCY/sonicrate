@@ -1,8 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { SoundCard } from "@/components/ui/sound-card";
-import { Box, Zap, Fingerprint, Lock, Plus, ShoppingBag } from "lucide-react";
+import { Box, Zap, Fingerprint, Lock, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -58,7 +57,7 @@ export default function PacksPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-full h-16 text-3xl font-black italic uppercase tracking-tighter">
+              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-full h-16 text-3xl font-black italic uppercase tracking-tighter transition-all">
                 ADD TO CART
               </Button>
 
@@ -121,8 +120,8 @@ export default function PacksPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
               {suggestedPacks.map((pack) => (
-                <div key={pack.id} className="group bg-white rounded-[3.5rem] p-10 text-black flex flex-col items-center space-y-8 transition-transform hover:-translate-y-2 duration-300">
-                  <Link href={`/packs`} className="w-full space-y-6 flex flex-col items-center">
+                <div key={pack.id} className="group bg-white rounded-[4rem] p-10 text-black flex flex-col items-center space-y-8 transition-transform hover:-translate-y-2 duration-300">
+                  <Link href={`/packs`} className="w-full space-y-8 flex flex-col items-center">
                     <div className="relative w-full aspect-square overflow-hidden shadow-sm">
                       <Image 
                         src={pack.imageUrl} 
@@ -130,24 +129,25 @@ export default function PacksPage() {
                         fill 
                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
                       />
-                      <div className="absolute top-3 right-3 bg-primary px-4 py-1.5 text-[11px] font-black border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase">
-                        SAVE $60
+                      <div className="absolute top-4 right-4 bg-primary px-4 py-1.5 text-[11px] font-black border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase">
+                        SAVE ${pack.save}
                       </div>
                     </div>
                     
                     <div className="text-center space-y-2">
-                      <h4 className="font-black text-2xl uppercase tracking-tight">{pack.title}</h4>
-                      <p className="text-xs font-bold opacity-40 uppercase tracking-widest">{pack.category}</p>
+                      <h4 className="font-black text-3xl uppercase tracking-tighter leading-none">{pack.title.split('|')[0]} |</h4>
+                      <h4 className="font-black text-3xl uppercase tracking-tighter leading-none">{pack.title.split('|')[1]}</h4>
+                      <p className="text-[10px] font-bold opacity-30 uppercase tracking-[0.2em] pt-2">{pack.category}</p>
                       
-                      <div className="flex justify-center items-center gap-3 pt-2">
-                        <span className="text-4xl font-black text-blue-600">${pack.price}</span>
-                        <span className="text-3xl font-bold line-through opacity-20">${pack.oldPrice}</span>
+                      <div className="flex justify-center items-center gap-4 pt-4">
+                        <span className="text-5xl font-black text-blue-600">${pack.price}</span>
+                        <span className="text-4xl font-bold line-through opacity-10">${pack.oldPrice}</span>
                       </div>
                     </div>
                   </Link>
 
-                  <Button className="w-full bg-black text-primary hover:bg-primary hover:text-black rounded-full h-14 text-xl font-black uppercase tracking-tighter italic transition-colors">
-                    ADD TO CART <Plus className="ml-2 h-5 w-5" />
+                  <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-full h-16 text-xl font-black uppercase tracking-tighter italic transition-all group-hover:scale-[1.02]">
+                    ADD TO CART <Plus className="ml-2 h-5 w-5 stroke-[4px]" />
                   </Button>
                 </div>
               ))}
