@@ -56,27 +56,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Sounds Section - Fixed Overlap */}
-        <section className="bg-black py-48 relative overflow-hidden">
-          <div className="container mx-auto px-4">
+        {/* Featured Sounds Section */}
+        <section className="bg-black py-48 relative overflow-hidden flex items-center min-h-[800px]">
+          <div className="container mx-auto px-4 relative">
             {featuredSounds.map((pack) => (
-              <div key={pack.id} className="relative flex flex-col lg:flex-row items-center justify-center min-h-[600px]">
+              <div key={pack.id} className="relative flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0">
                 
-                {/* Massive Background Text */}
-                <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none z-0">
-                  <h2 className="text-[18vw] font-black text-white uppercase tracking-tighter leading-[0.75] opacity-100">
+                {/* Massive Background Text - Moved further back and opacity refined */}
+                <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none -z-10 translate-x-[10%] lg:translate-x-[20%]">
+                  <h2 className="text-[25vw] font-black text-white uppercase tracking-tighter leading-[0.7] opacity-80 whitespace-nowrap">
                     FEATURED
                   </h2>
-                  <h2 className="text-[18vw] font-black text-white uppercase tracking-tighter leading-[0.75] opacity-100">
+                  <h2 className="text-[25vw] font-black text-white uppercase tracking-tighter leading-[0.7] opacity-80 whitespace-nowrap">
                     SOUNDS
                   </h2>
                 </div>
 
-                {/* Content Overlay */}
-                <div className="relative z-10 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+                {/* Content Overlay - Elevated z-index */}
+                <div className="relative z-20 w-full flex flex-col lg:flex-row items-center lg:items-end justify-center gap-12 lg:gap-24">
                   
                   {/* Image with precise border */}
-                  <div className="relative w-full max-w-[500px] aspect-square border-[10px] border-[#1a1a1a] flex-shrink-0">
+                  <div className="relative w-full max-w-[500px] aspect-square border-[16px] border-[#1a1a1a] flex-shrink-0 shadow-2xl">
                     <Image 
                       src={pack.imageUrl} 
                       alt={pack.title} 
@@ -87,33 +87,36 @@ export default function Home() {
                   </div>
                   
                   {/* Text content */}
-                  <div className="max-w-md space-y-8">
-                    <div className="space-y-4">
-                      <h3 className="text-5xl lg:text-7xl font-black italic text-primary uppercase tracking-tighter">
-                        {pack.title}
-                      </h3>
-                      <p className="text-white/60 text-sm font-bold leading-relaxed">
+                  <div className="max-w-md space-y-12">
+                    <div className="space-y-6">
+                      <div className="space-y-0">
+                        <h3 className="text-7xl lg:text-9xl font-black italic text-primary uppercase tracking-tighter leading-[0.8]">
+                          {pack.title.split(' ')[0]}
+                        </h3>
+                        <h3 className="text-7xl lg:text-9xl font-black italic text-primary uppercase tracking-tighter leading-[0.8] ml-4 lg:ml-8">
+                          {pack.title.split(' ')[1]}
+                        </h3>
+                      </div>
+                      
+                      <p className="text-white text-sm font-bold leading-relaxed max-w-xs drop-shadow-md">
                         {pack.description}
                       </p>
                     </div>
                     
                     {/* Stylized Waveform */}
-                    <div className="py-4">
-                      <svg width="200" height="40" viewBox="0 0 200 40" className="text-white/40">
-                        {Array.from({ length: 40 }).map((_, i) => (
-                          <rect 
-                            key={i} 
-                            x={i * 5} 
-                            y={20 - (Math.sin(i * 0.5) * 15 + 2)} 
-                            width="2" 
-                            height={Math.sin(i * 0.5) * 30 + 4} 
-                            fill="currentColor" 
-                          />
-                        ))}
-                      </svg>
+                    <div className="flex gap-1 h-12 items-center">
+                      {Array.from({ length: 24 }).map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="w-[2px] bg-white/60" 
+                          style={{ 
+                            height: `${20 + Math.sin(i * 0.8) * 60}%` 
+                          }} 
+                        />
+                      ))}
                     </div>
 
-                    <Button className="bg-primary text-black font-black italic text-2xl uppercase tracking-tighter px-12 h-16 rounded-none hover:bg-primary/80">
+                    <Button className="bg-primary text-black font-black italic text-3xl uppercase tracking-tighter px-16 h-20 rounded-none hover:bg-white transition-colors">
                       ADD +
                     </Button>
                   </div>
