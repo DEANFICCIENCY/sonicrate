@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Youtube, Instagram, Music2, ChevronRight } from "lucide-react";
+import { Youtube, Instagram, Music2, ChevronsRight } from "lucide-react";
 
 export function Footer() {
   return (
@@ -18,7 +18,7 @@ export function Footer() {
               className="w-full bg-transparent p-4 pl-6 text-xs font-black uppercase tracking-widest outline-none placeholder:text-white/20"
             />
             <button className="bg-primary text-black px-6 h-12 hover:bg-white transition-colors">
-              <ChevronRight size={24} strokeWidth={3} />
+              <ChevronsRight size={24} strokeWidth={3} />
             </button>
           </form>
         </div>

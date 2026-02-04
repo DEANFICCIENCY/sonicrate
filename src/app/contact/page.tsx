@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ChevronRight, Instagram, Youtube, Music2, Globe, MessageSquare } from "lucide-react";
+import { ChevronsRight, Instagram, Youtube, MessageSquare, Globe } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -15,19 +15,16 @@ export default function ContactPage() {
           </h1>
 
           <div className="w-full max-w-md">
-            <div className="flex items-center border-4 border-primary p-1 bg-black">
+            <form className="relative flex items-center border-2 border-primary focus-within:border-primary transition-all p-1 bg-black">
               <input 
                 type="email" 
                 placeholder="E-MAIL ADDRESS" 
-                className="w-full bg-transparent p-4 text-xs font-black uppercase tracking-widest outline-none text-primary placeholder:text-primary/30"
+                className="w-full bg-transparent p-4 pl-6 text-xs font-black uppercase tracking-widest outline-none text-primary placeholder:text-primary/30"
               />
-              <button className="bg-primary text-black px-4 py-2 hover:bg-white transition-colors">
-                <div className="flex gap-[2px]">
-                  <ChevronRight size={24} strokeWidth={4} />
-                  <ChevronRight size={24} strokeWidth={4} className="-ml-4" />
-                </div>
+              <button className="bg-primary text-black px-6 h-12 hover:bg-white transition-colors">
+                <ChevronsRight size={24} strokeWidth={3} />
               </button>
-            </div>
+            </form>
           </div>
 
           <p className="text-[10px] md:text-xs font-bold leading-relaxed opacity-60 uppercase tracking-widest max-w-2xl mx-auto px-4">
