@@ -1,66 +1,98 @@
-
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { SoundCard } from "@/components/ui/sound-card";
-import { Download, Gift } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function FreePage() {
-  const freePacks = [
-    { id: "f1", title: "Dark Ambient Layers", category: "Free Weekly", price: 0, imageUrl: "https://picsum.photos/seed/free1/400/400", isFree: true },
-    { id: "f2", title: "Techno Kick Starter", category: "Essential", price: 0, imageUrl: "https://picsum.photos/seed/free2/400/400", isFree: true },
-    { id: "f3", title: "Industrial Percussion", category: "Found Sounds", price: 0, imageUrl: "https://picsum.photos/seed/free3/400/400", isFree: true },
-    { id: "f4", title: "Bit-Crushed Melodies", category: "Melodic", price: 0, imageUrl: "https://picsum.photos/seed/free4/400/400", isFree: true },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col font-body">
+    <div className="min-h-screen flex flex-col font-body bg-black">
       <Header />
       
-      <main className="flex-grow">
-        {/* Banner Section */}
-        <section className="bg-primary py-24 border-b-4 border-foreground">
-          <div className="container mx-auto px-4 text-center space-y-8 relative overflow-hidden">
-            <Gift className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 h-64 w-64 text-foreground/5 rotate-[-15deg]" />
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-none italic">ZERO COST</h1>
-              <p className="text-xl md:text-3xl font-black uppercase tracking-widest text-foreground/70">NO STRINGS ATTACHED. JUST SOUND.</p>
-            </div>
-            <p className="max-w-2xl mx-auto text-lg font-bold">
-              We believe in fueling the underground community. Here you'll find our curated collection of free sample packs, presets, and production tools.
-            </p>
-          </div>
-        </section>
-
-        <section className="py-20 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-12 border-b-2 border-foreground pb-4">
-              <h2 className="text-3xl font-black uppercase tracking-tighter italic">AVAILABLE DOWNLOADS</h2>
-              <span className="font-black text-primary bg-foreground px-4 py-1 uppercase tracking-widest text-xs">4 ARTIFACTS</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {freePacks.map((pack) => (
-                <SoundCard key={pack.id} {...pack} />
-              ))}
-            </div>
+      <main className="flex-grow flex flex-col lg:flex-row">
+        {/* Left Section: Polaroid and Description */}
+        <div className="w-full lg:w-1/2 bg-black flex flex-col items-center justify-center p-8 md:p-20 border-b lg:border-b-0 lg:border-r border-white/5">
+          <div className="relative aspect-square w-full max-w-xl mb-12">
+            {/* Neon Glow Effect */}
+            <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full opacity-50" />
             
-            <div className="mt-24 p-12 bg-foreground text-background text-center space-y-8 asymmetric-border">
-              <h3 className="text-4xl font-black uppercase tracking-tighter italic">NEVER MISS A FREE DROP</h3>
-              <p className="max-w-xl mx-auto text-muted-foreground font-bold">
-                Our best free packs are only available for 7 days. Subscribe to our newsletter to get the notification immediately when a new one drops.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                <input 
-                  type="email" 
-                  placeholder="YOUR@EMAIL.COM" 
-                  className="bg-transparent border-2 border-background text-background placeholder:text-muted-foreground p-4 font-black uppercase tracking-widest flex-grow outline-none focus:border-primary transition-colors"
+            <div className="relative p-6 bg-white shadow-2xl">
+              <div className="relative aspect-square bg-black overflow-hidden border-2 border-black/10">
+                <Image 
+                  src="https://picsum.photos/seed/free-vault/800/800" 
+                  alt="Sonicrate Vault" 
+                  fill 
+                  className="object-cover grayscale"
+                  data-ai-hint="polaroid cassette"
                 />
-                <Button className="bg-primary text-foreground hover:bg-primary/90 rounded-none h-14 px-8 font-black uppercase tracking-widest italic">SUBSCRIBE</Button>
+              </div>
+              <div className="pt-8 pb-4 space-y-4">
+                <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                  <h3 className="text-2xl font-black italic tracking-tighter uppercase leading-none text-black">
+                    "BASEMENT TAPES"
+                  </h3>
+                  <div className="h-6 w-1/3 bg-black/5" />
+                </div>
+                <div className="flex justify-between text-[10px] font-black uppercase text-black/40">
+                  <span>1. CURRENTS</span>
+                  <span>2. SEROTONIN</span>
+                  <span>3. SONICATE</span>
+                </div>
+                <div className="pt-4 flex justify-between items-end">
+                  <p className="text-[10px] font-black italic uppercase text-black">PRODUCED BY O'NEIL</p>
+                  <div className="h-8 w-24 bg-black/10 flex items-center justify-center">
+                    <div className="w-full h-[2px] bg-black/20 mx-2" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+
+          <div className="max-w-md text-center">
+            <p className="text-xs md:text-sm font-medium text-white/60 leading-relaxed uppercase tracking-wider font-mono">
+              Subscribe and get hand-picked loops from the vault every week, 
+              alternative textures, experimental sounds, production-ready stems. 
+              No spam, no gimmicks. Just sounds. 
+              Unsubscribe anytime.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Section: Subscription Form */}
+        <div className="w-full lg:w-1/2 bg-primary flex flex-col items-center justify-center p-8 md:p-20">
+          <div className="max-w-2xl w-full space-y-24">
+            <div className="space-y-4">
+              <h1 className="text-6xl md:text-[100px] font-black italic tracking-tighter leading-[0.85] text-black uppercase">
+                3 SOUNDS.<br />
+                EVERY WEEK.<br />
+                ZERO COST.
+              </h1>
+              
+              <p className="text-2xl md:text-3xl font-black italic tracking-tight text-blue-600 uppercase">
+                JOIN THE SONIC UNDERGROUND.
+              </p>
+            </div>
+
+            <form className="space-y-8">
+              <div className="space-y-6">
+                <div className="relative group">
+                  <input 
+                    type="text" 
+                    placeholder="NAME"
+                    className="w-full h-20 bg-transparent border-[6px] border-black rounded-full px-10 text-2xl font-black italic uppercase placeholder:text-black/30 outline-none focus:bg-white/10 transition-colors"
+                  />
+                </div>
+                <div className="relative group">
+                  <input 
+                    type="email" 
+                    placeholder="E-MAIL ADDRESS"
+                    className="w-full h-20 bg-transparent border-[6px] border-black rounded-full px-10 text-2xl font-black italic uppercase placeholder:text-black/30 outline-none focus:bg-white/10 transition-colors"
+                  />
+                </div>
+              </div>
+              
+              <button className="hidden h-0 w-0" type="submit">SUBMIT</button>
+            </form>
+          </div>
+        </div>
       </main>
 
       <Footer />
