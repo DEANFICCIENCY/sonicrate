@@ -2,6 +2,12 @@
 {
   "placeholderImages": [
     {
+      "id": "logo",
+      "description": "Sonicrate Brand Logo",
+      "imageUrl": "/logoT.png",
+      "imageHint": "brand logo"
+    },
+    {
       "id": "hero-bg",
       "description": "Abstract audio visualizer or sound waves",
       "imageUrl": "https://picsum.photos/seed/sonicrate-hero/1200/800",
@@ -42,6 +48,18 @@
       "description": "Cinematic FX pack cover",
       "imageUrl": "https://picsum.photos/seed/pack6/400/400",
       "imageHint": "dark cinematic"
+    },
+    {
+      "id": "studio-collage",
+      "description": "Black and white studio gear collage",
+      "imageUrl": "https://picsum.photos/seed/studio-collage/1000/1500",
+      "imageHint": "music studio"
+    },
+    {
+      "id": "free-vault",
+      "description": "Polaroid style cassette tape",
+      "imageUrl": "https://picsum.photos/seed/free-vault/800/800",
+      "imageHint": "polaroid cassette"
     }
   ]
 }
