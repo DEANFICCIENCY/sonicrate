@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Volume2, Box, Zap, Fingerprint, Lock, ShoppingBag } from "lucide-react";
+import { Volume2, Box, Zap, Fingerprint, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,24 +12,12 @@ export default function Home() {
       id: "static-bloom",
       title: "STATIC BLOOM",
       description: "Fuzz-drenched riffs, overdriven basslines, and gritty drum breaks. Built for post-punk, grunge, and shoegaze tracks that need controlled chaos and analog distortion.",
-      imageUrl: "https://picsum.photos/seed/bloom/400/400",
-    },
-    {
-      id: "nocturne-archive",
-      title: "NOCTURNE ARCHIVE",
-      description: "Late-night, reverb-soaked guitar loops, washed-out synth pads, and hazy drum textures. Perfect for dream pop and lo-fi productions that live in the 2 AM headspace.",
-      imageUrl: "https://picsum.photos/seed/nocturne/400/400",
-    },
-    {
-      id: "velvet-drift",
-      title: "VELVET DRIFT",
-      description: "Slow-burning ambient guitars, drifting synth layers, and soft percussion. Designed for slowcore, indie, and cinematic atmospheres that breathe and evolve.",
-      imageUrl: "https://picsum.photos/seed/velvet/400/400",
+      imageUrl: "https://picsum.photos/seed/bloom/800/800",
     }
   ];
 
   return (
-    <div className="min-h-screen flex flex-col font-body selection:bg-foreground selection:text-primary">
+    <div className="min-h-screen flex flex-col font-body selection:bg-foreground selection:text-primary overflow-x-hidden">
       <Header />
       
       {/* Sale Bar */}
@@ -68,92 +56,70 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Sounds Section */}
-        <section className="bg-black py-32">
+        {/* Featured Sounds Section - Fixed Overlap */}
+        <section className="bg-black py-48 relative overflow-hidden">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-              {/* Left Title */}
-              <div className="lg:col-span-4 lg:sticky lg:top-32">
-                <h2 className="text-7xl md:text-9xl font-black text-white uppercase tracking-tighter leading-[0.85]">
-                  FEATURED <br /> SOUNDS
-                </h2>
-              </div>
+            {featuredSounds.map((pack) => (
+              <div key={pack.id} className="relative flex flex-col lg:flex-row items-center justify-center min-h-[600px]">
+                
+                {/* Massive Background Text */}
+                <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none z-0">
+                  <h2 className="text-[18vw] font-black text-white uppercase tracking-tighter leading-[0.75] opacity-100">
+                    FEATURED
+                  </h2>
+                  <h2 className="text-[18vw] font-black text-white uppercase tracking-tighter leading-[0.75] opacity-100">
+                    SOUNDS
+                  </h2>
+                </div>
 
-              {/* Right Cards */}
-              <div className="lg:col-span-8 space-y-32">
-                {featuredSounds.map((pack, idx) => (
-                  <div key={pack.id} className={`flex flex-col md:flex-row gap-8 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
-                    <div className="relative group">
-                      <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-40 blur-2xl transition-opacity duration-500"></div>
-                      <div className="relative w-64 h-64 border-4 border-primary/20 group-hover:border-primary transition-colors">
-                        <Image 
-                          src={pack.imageUrl} 
-                          alt={pack.title} 
-                          fill 
-                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1 space-y-4 text-center md:text-left">
-                      <h3 className="text-3xl font-black italic text-primary uppercase tracking-tighter">{pack.title}</h3>
-                      <p className="text-white/60 text-xs font-bold leading-relaxed max-w-md">
+                {/* Content Overlay */}
+                <div className="relative z-10 w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+                  
+                  {/* Image with precise border */}
+                  <div className="relative w-full max-w-[500px] aspect-square border-[10px] border-[#1a1a1a] flex-shrink-0">
+                    <Image 
+                      src={pack.imageUrl} 
+                      alt={pack.title} 
+                      fill 
+                      className="object-cover grayscale"
+                      data-ai-hint="brutalist architecture"
+                    />
+                  </div>
+                  
+                  {/* Text content */}
+                  <div className="max-w-md space-y-8">
+                    <div className="space-y-4">
+                      <h3 className="text-5xl lg:text-7xl font-black italic text-primary uppercase tracking-tighter">
+                        {pack.title}
+                      </h3>
+                      <p className="text-white/60 text-sm font-bold leading-relaxed">
                         {pack.description}
                       </p>
-                      
-                      <div className="py-4">
-                        {/* Waveform Mockup */}
-                        <svg width="200" height="40" viewBox="0 0 200 40" className="text-white opacity-40">
-                          <rect x="0" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="5" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="10" y="5" width="2" height="30" fill="currentColor" />
-                          <rect x="15" y="12" width="2" height="16" fill="currentColor" />
-                          <rect x="20" y="18" width="2" height="4" fill="currentColor" />
-                          <rect x="25" y="8" width="2" height="24" fill="currentColor" />
-                          <rect x="30" y="2" width="2" height="36" fill="currentColor" />
-                          <rect x="35" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="40" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="45" y="12" width="2" height="16" fill="currentColor" />
-                          <rect x="50" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="55" y="5" width="2" height="30" fill="currentColor" />
-                          <rect x="60" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="65" y="18" width="2" height="4" fill="currentColor" />
-                          <rect x="70" y="8" width="2" height="24" fill="currentColor" />
-                          <rect x="75" y="2" width="2" height="36" fill="currentColor" />
-                          <rect x="80" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="85" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="90" y="5" width="2" height="30" fill="currentColor" />
-                          <rect x="95" y="12" width="2" height="16" fill="currentColor" />
-                          <rect x="100" y="18" width="2" height="4" fill="currentColor" />
-                          <rect x="105" y="8" width="2" height="24" fill="currentColor" />
-                          <rect x="110" y="2" width="2" height="36" fill="currentColor" />
-                          <rect x="115" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="120" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="125" y="12" width="2" height="16" fill="currentColor" />
-                          <rect x="130" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="135" y="5" width="2" height="30" fill="currentColor" />
-                          <rect x="140" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="145" y="18" width="2" height="4" fill="currentColor" />
-                          <rect x="150" y="8" width="2" height="24" fill="currentColor" />
-                          <rect x="155" y="2" width="2" height="36" fill="currentColor" />
-                          <rect x="160" y="10" width="2" height="20" fill="currentColor" />
-                          <rect x="165" y="15" width="2" height="10" fill="currentColor" />
-                          <rect x="170" y="5" width="2" height="30" fill="currentColor" />
-                          <rect x="175" y="12" width="2" height="16" fill="currentColor" />
-                          <rect x="180" y="18" width="2" height="4" fill="currentColor" />
-                          <rect x="185" y="8" width="2" height="24" fill="currentColor" />
-                          <rect x="190" y="2" width="2" height="36" fill="currentColor" />
-                        </svg>
-                      </div>
-
-                      <Button className="bg-primary text-black font-black italic text-lg uppercase tracking-tighter px-8 hover:bg-primary/80">
-                        ADD +
-                      </Button>
                     </div>
+                    
+                    {/* Stylized Waveform */}
+                    <div className="py-4">
+                      <svg width="200" height="40" viewBox="0 0 200 40" className="text-white/40">
+                        {Array.from({ length: 40 }).map((_, i) => (
+                          <rect 
+                            key={i} 
+                            x={i * 5} 
+                            y={20 - (Math.sin(i * 0.5) * 15 + 2)} 
+                            width="2" 
+                            height={Math.sin(i * 0.5) * 30 + 4} 
+                            fill="currentColor" 
+                          />
+                        ))}
+                      </svg>
+                    </div>
+
+                    <Button className="bg-primary text-black font-black italic text-2xl uppercase tracking-tighter px-12 h-16 rounded-none hover:bg-primary/80">
+                      ADD +
+                    </Button>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
 
