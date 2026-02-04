@@ -2,8 +2,9 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { SoundCard } from "@/components/ui/sound-card";
-import { Box, Zap, Fingerprint, Lock } from "lucide-react";
+import { Box, Zap, Fingerprint, Lock, Plus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function PacksPage() {
   const suggestedPacks = [
@@ -115,26 +116,39 @@ export default function PacksPage() {
         {/* Suggestion Section */}
         <section className="py-24 bg-black">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-center text-primary uppercase mb-16">
+            <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter text-center text-primary uppercase mb-20 italic">
               YOU MAY ALSO LIKE
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
               {suggestedPacks.map((pack) => (
-                <div key={pack.id} className="bg-white rounded-[2.5rem] p-6 text-black space-y-4">
-                   <div className="relative aspect-square border-2 border-black/10 overflow-hidden">
-                    <Image src={pack.imageUrl} alt={pack.title} fill className="object-cover grayscale" />
-                    <div className="absolute top-2 right-2 bg-primary px-3 py-1 text-[10px] font-black border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      SAVE $60
+                <div key={pack.id} className="group bg-white rounded-[3.5rem] p-10 text-black flex flex-col items-center space-y-8 transition-transform hover:-translate-y-2 duration-300">
+                  <Link href={`/packs`} className="w-full space-y-6 flex flex-col items-center">
+                    <div className="relative w-full aspect-square overflow-hidden shadow-sm">
+                      <Image 
+                        src={pack.imageUrl} 
+                        alt={pack.title} 
+                        fill 
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                      />
+                      <div className="absolute top-3 right-3 bg-primary px-4 py-1.5 text-[11px] font-black border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase">
+                        SAVE $60
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-center space-y-1">
-                    <h4 className="font-black text-sm uppercase">{pack.title}</h4>
-                    <p className="text-[10px] font-bold opacity-60 uppercase">{pack.category}</p>
-                    <div className="flex justify-center gap-2 pt-1">
-                      <span className="text-xl font-black text-blue-600">${pack.price}</span>
-                      <span className="text-xl font-bold line-through opacity-30">${pack.oldPrice}</span>
+                    
+                    <div className="text-center space-y-2">
+                      <h4 className="font-black text-2xl uppercase tracking-tight">{pack.title}</h4>
+                      <p className="text-xs font-bold opacity-40 uppercase tracking-widest">{pack.category}</p>
+                      
+                      <div className="flex justify-center items-center gap-3 pt-2">
+                        <span className="text-4xl font-black text-blue-600">${pack.price}</span>
+                        <span className="text-3xl font-bold line-through opacity-20">${pack.oldPrice}</span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
+
+                  <Button className="w-full bg-black text-primary hover:bg-primary hover:text-black rounded-full h-14 text-xl font-black uppercase tracking-tighter italic transition-colors">
+                    ADD TO CART <Plus className="ml-2 h-5 w-5" />
+                  </Button>
                 </div>
               ))}
             </div>
