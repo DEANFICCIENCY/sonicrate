@@ -90,6 +90,13 @@ export function Header() {
     }
   };
 
+  const getDisplayUsername = () => {
+    if (!user) return "MY ACCOUNT";
+    if (user.displayName) return user.displayName;
+    if (user.email) return user.email.split('@')[0];
+    return "USER";
+  };
+
   return (
     <header className="w-full bg-primary border-b border-black sticky top-0 z-50">
       <div className="container mx-auto px-4 flex h-14 items-center justify-between">
@@ -128,13 +135,13 @@ export function Header() {
                   <Avatar className="h-8 w-8 border-2 border-black">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
                     <AvatarFallback className="bg-black text-primary font-black text-xs uppercase italic">
-                      {user.displayName?.charAt(0) || "U"}
+                      {user.displayName?.charAt(0) || user.email?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                  <DropdownMenuLabel className="font-black italic uppercase tracking-tighter border-b border-black/10 py-3">
-                    {user.displayName || user.email || "MY ACCOUNT"}
+                  <DropdownMenuLabel className="font-black italic uppercase tracking-tighter border-b border-black/10 py-3 truncate">
+                    {getDisplayUsername()}
                   </DropdownMenuLabel>
                   <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
                     PURCHASES
