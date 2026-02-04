@@ -115,39 +115,53 @@ export default function PacksPage() {
         {/* Suggestion Section */}
         <section className="py-24 bg-black">
           <div className="container mx-auto px-4">
-            <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter text-center text-primary uppercase mb-20 italic">
+            <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter text-center text-primary uppercase mb-20">
               YOU MAY ALSO LIKE
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
               {suggestedPacks.map((pack) => (
-                <div key={pack.id} className="group bg-white rounded-[4rem] p-10 text-black flex flex-col items-center transition-transform hover:-translate-y-2 duration-300">
-                  <Link href={`/packs`} className="w-full flex flex-col items-center">
-                    <div className="relative w-full aspect-square overflow-hidden shadow-sm mb-8">
-                      <Image 
-                        src={pack.imageUrl} 
-                        alt={pack.title} 
-                        fill 
-                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
-                      />
+                <div key={pack.id} className="group relative bg-white rounded-[32px] border-[6px] border-white shadow-md overflow-hidden flex flex-col transition-transform hover:-translate-y-2 duration-300">
+                  <Link href={`/packs`} className="flex flex-col h-full">
+                    {/* Image Container with Padding */}
+                    <div className="p-4 relative">
                       {/* Red Dot Cart Icon */}
-                      <div className="absolute top-4 left-4 h-8 w-8 bg-[#FF0000] rounded-full flex items-center justify-center text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10">
+                      <div className="absolute top-6 left-6 h-8 w-8 bg-[#FF0000] rounded-full flex items-center justify-center text-white z-10 shadow-sm">
                         <ShoppingBag size={14} strokeWidth={3} />
                       </div>
                       
-                      {/* Save badge */}
-                      <div className="absolute top-4 right-4 bg-primary px-4 py-1.5 text-[11px] font-black border border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase">
+                      {/* Save badge - Pill Shaped */}
+                      <div className="absolute top-6 right-6 bg-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest z-10 shadow-sm text-black">
                         SAVE ${pack.save}
+                      </div>
+
+                      <div className="relative w-full aspect-square rounded-[24px] overflow-hidden shadow-sm bg-black">
+                        <Image 
+                          src={pack.imageUrl} 
+                          alt={pack.title} 
+                          fill 
+                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                          data-ai-hint="abstract brutalist"
+                        />
                       </div>
                     </div>
                     
-                    <div className="text-center space-y-2">
-                      <h4 className="font-black text-3xl uppercase tracking-tighter leading-none">{pack.title.split('|')[0]} |</h4>
-                      <h4 className="font-black text-3xl uppercase tracking-tighter leading-none">{pack.title.split('|')[1]}</h4>
-                      <p className="text-[10px] font-bold opacity-30 uppercase tracking-[0.2em] pt-2">{pack.category}</p>
+                    {/* Text Content */}
+                    <div className="p-6 pt-2 text-center space-y-3 flex flex-col flex-grow">
+                      <div className="space-y-1">
+                        <h4 className="font-black text-2xl uppercase tracking-tighter leading-none text-black">
+                          {pack.title.split('|')[0]}
+                        </h4>
+                        <h4 className="font-black text-2xl uppercase tracking-tighter leading-none text-black">
+                          {pack.title.split('|')[1]}
+                        </h4>
+                      </div>
+                      <p className="text-[10px] font-bold opacity-30 uppercase tracking-[0.2em] text-black">
+                        {pack.category}
+                      </p>
                       
-                      <div className="flex justify-center items-center gap-4 pt-4 pb-8">
+                      <div className="mt-auto flex justify-center items-center gap-4 pt-4 pb-2">
                         <span className="text-5xl font-black text-blue-600">${pack.price}</span>
-                        <span className="text-4xl font-bold line-through opacity-10">${pack.oldPrice}</span>
+                        <span className="text-4xl font-bold line-through opacity-10 text-black">${pack.oldPrice}</span>
                       </div>
                     </div>
                   </Link>
