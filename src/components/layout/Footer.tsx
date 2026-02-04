@@ -33,7 +33,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="w-full max-w-4xl text-center space-y-12">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 leading-relaxed mx-auto max-w-2xl">
-            SONICRATE™ IS A PRODUCER-FIRST PLATFORM FOUNDED BY O'NEIL, BUILT TO CONNECT THE COMMUNITY THROUGH EXCLUSIVE SAMPLE RELEASES, PREMIUM SOUND DESIGN, AND TOOLS THAT FUEL YOUR CREATIVE PROCESS.
+            SONICRATE IS A PRODUCER-FIRST PLATFORM FOUNDED BY O'NEIL, BUILT TO CONNECT THE COMMUNITY THROUGH EXCLUSIVE SAMPLE RELEASES, PREMIUM SOUND DESIGN, AND TOOLS THAT FUEL YOUR CREATIVE PROCESS.
           </p>
           
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">

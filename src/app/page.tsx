@@ -29,12 +29,12 @@ export default function Home() {
         <section className="bg-primary pt-24 pb-32 text-center">
           <div className="container mx-auto px-4 flex flex-col items-center space-y-12">
             <h1 className="text-[12vw] font-black italic tracking-tighter leading-none text-foreground select-none flex items-start justify-center">
-              SONICRATE<span className="text-[3vw] not-italic leading-none mt-2">TM</span>
+              SONICRATE
             </h1>
             
             <div className="max-w-3xl space-y-6">
               <p className="text-xs md:text-sm font-black uppercase tracking-widest leading-relaxed max-w-2xl mx-auto">
-                SONICRATE™ IS A PRODUCER-FIRST PLATFORM BY O'NEIL, <br />
+                SONICRATE IS A PRODUCER-FIRST PLATFORM BY O'NEIL, <br />
                 CONNECTING THE ALTERNATIVE MUSIC COMMUNITY THROUGH EXCLUSIVE SAMPLE PACKS. <br />
                 WE'RE SOUND DESIGNERS FOR THE SUBCULTURE <br />
                 DELIVERING AUTHENTIC SHOEGAZE, POST-PUNK, DREAM POP, AND GRUNGE TEXTURES <br />

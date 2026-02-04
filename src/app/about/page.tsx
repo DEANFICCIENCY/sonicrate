@@ -61,7 +61,7 @@ export default function AboutPage() {
           <div className="w-full lg:w-1/2 p-8 md:p-20 flex flex-col items-center justify-center text-center space-y-16">
             <div className="space-y-4">
               <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter leading-none flex items-start justify-center">
-                SONICRATE<span className="text-2xl not-italic leading-none mt-2">TM</span>
+                SONICRATE
               </h1>
             </div>
 
