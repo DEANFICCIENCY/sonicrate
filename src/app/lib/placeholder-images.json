@@ -1,0 +1,47 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Abstract audio visualizer or sound waves",
+      "imageUrl": "https://picsum.photos/seed/sonicrate-hero/1200/800",
+      "imageHint": "sound waves"
+    },
+    {
+      "id": "pack-1",
+      "description": "Techno sample pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack1/400/400",
+      "imageHint": "abstract tech"
+    },
+    {
+      "id": "pack-2",
+      "description": "Ambient texture pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack2/400/400",
+      "imageHint": "glitch art"
+    },
+    {
+      "id": "pack-3",
+      "description": "Drum machine kit pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack3/400/400",
+      "imageHint": "analog gear"
+    },
+    {
+      "id": "pack-4",
+      "description": "Synth preset pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack4/400/400",
+      "imageHint": "vaporwave synth"
+    },
+    {
+      "id": "pack-5",
+      "description": "Industrial loops pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack5/400/400",
+      "imageHint": "industrial texture"
+    },
+    {
+      "id": "pack-6",
+      "description": "Cinematic FX pack cover",
+      "imageUrl": "https://picsum.photos/seed/pack6/400/400",
+      "imageHint": "dark cinematic"
+    }
+  ]
+}
