@@ -37,14 +37,6 @@ export default function ContactPage() {
             WE RESPECT YOUR INBOX.<br />
             ONLY ESSENTIAL DROPS, NO FLUFF.
           </p>
-
-          <div className="pt-8">
-            <svg width="80" height="40" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white">
-              <rect x="0" y="15" width="40" height="10" fill="currentColor" />
-              <rect x="42" y="10" width="8" height="20" rx="4" fill="currentColor" />
-              <rect x="52" y="5" width="28" height="30" rx="4" fill="currentColor" />
-            </svg>
-          </div>
         </section>
 
         {/* Form Section: CONTACT (Neon Yellow) */}
