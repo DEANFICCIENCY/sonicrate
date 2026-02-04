@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag, User, Apple, X } from "lucide-react";
 import { useAuth, useUser } from "@/firebase";
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,12 +23,17 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
   const auth = useAuth();
   const { user, loading } = useUser();
+  const { toast } = useToast();
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSignIn = async () => {
     if (!auth || isSigningIn) {
@@ -42,9 +47,44 @@ export function Header() {
       await signInWithPopup(auth, provider);
       setIsSignInOpen(false);
     } catch (error: any) {
-      // Quietly handle standard cancellation errors
       if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
-        console.error("Error signing in with Google:", error);
+        toast({
+          variant: "destructive",
+          title: "SIGN IN ERROR",
+          description: error.message.toUpperCase(),
+        });
+      }
+    } finally {
+      setIsSigningIn(false);
+    }
+  };
+
+  const handleEmailAuth = async () => {
+    if (!auth || !email || !password || isSigningIn) return;
+    
+    setIsSigningIn(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsSignInOpen(false);
+    } catch (error: any) {
+      // If user doesn't exist, attempt to create account
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          setIsSignInOpen(false);
+        } catch (createError: any) {
+          toast({
+            variant: "destructive",
+            title: "AUTH ERROR",
+            description: createError.message.toUpperCase(),
+          });
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "AUTH ERROR",
+          description: error.message.toUpperCase(),
+        });
       }
     } finally {
       setIsSigningIn(false);
@@ -104,7 +144,7 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <DropdownMenuLabel className="font-black italic uppercase tracking-tighter border-b border-black/10 py-3">
-                    {user.displayName || "MY ACCOUNT"}
+                    {user.displayName || user.email || "MY ACCOUNT"}
                   </DropdownMenuLabel>
                   <DropdownMenuItem className="cursor-pointer font-bold uppercase text-[10px] tracking-widest hover:bg-primary transition-colors py-3">
                     PURCHASES
@@ -155,14 +195,27 @@ export function Header() {
                         <div className="absolute w-full h-[1px] bg-black/10 left-0" />
                       </div>
 
-                      <div className="space-y-6">
+                      <div className="space-y-4">
                         <input 
                           type="email" 
                           placeholder="EMAIL" 
-                          className="w-full h-20 border-[3px] border-black px-8 text-2xl font-black italic uppercase placeholder:text-black/20 outline-none focus:border-blue-600"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full h-16 border-[3px] border-black px-8 text-xl font-black italic uppercase placeholder:text-black/20 outline-none focus:border-blue-600 bg-[#f0f7ff]"
                         />
-                        <button className="w-full h-20 bg-black text-white text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 transition-all">
-                          CONTINUE
+                        <input 
+                          type="password" 
+                          placeholder="PASSWORD" 
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full h-16 border-[3px] border-black px-8 text-xl font-black italic uppercase placeholder:text-black/20 outline-none focus:border-blue-600 bg-[#f0f7ff]"
+                        />
+                        <button 
+                          onClick={handleEmailAuth}
+                          disabled={isSigningIn}
+                          className="w-full h-20 bg-black text-white text-3xl font-black italic uppercase tracking-tighter hover:bg-blue-600 transition-all disabled:opacity-50"
+                        >
+                          {isSigningIn ? "..." : "CONTINUE"}
                         </button>
                       </div>
                     </div>
