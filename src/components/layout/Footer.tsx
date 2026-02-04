@@ -1,5 +1,10 @@
+'use client';
+
 import Link from "next/link";
-import { Youtube, Instagram, Music2, ChevronsRight } from "lucide-react";
+import { Youtube, Instagram, Music2 } from "lucide-react";
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export function Footer() {
   return (
@@ -7,20 +12,7 @@ export function Footer() {
       <div className="container mx-auto px-4 flex flex-col items-center">
         {/* Newsletter Section */}
         <div className="w-full max-w-xl text-center space-y-12 mb-24">
-          <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic text-primary leading-none">
-            GET EXCLUSIVE DROPS <br /> & INSIDER ACCESS
-          </h3>
-          
-          <form className="relative flex items-center border-2 border-primary/40 focus-within:border-primary transition-all p-1">
-            <input 
-              type="email" 
-              placeholder="E-MAIL ADDRESS" 
-              className="w-full bg-transparent p-4 pl-6 text-xs font-black uppercase tracking-widest outline-none placeholder:text-white/20"
-            />
-            <button className="bg-primary text-black px-6 h-12 hover:bg-white transition-colors">
-              <ChevronsRight size={24} strokeWidth={3} />
-            </button>
-          </form>
+          <NewsletterSectionWrapper />
         </div>
 
         {/* Social Icons */}
@@ -50,5 +42,39 @@ export function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+// Internal wrapper to handle the heading visibility alongside the form
+function NewsletterSectionWrapper() {
+  return (
+    <div className="space-y-12">
+      <NewsletterContentWithHeader />
+    </div>
+  );
+}
+
+function NewsletterContentWithHeader() {
+  const { user } = useUser();
+  const db = useFirestore();
+
+  const subscriptionRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'emails', user.uid);
+  }, [db, user]);
+
+  const { data: subscription } = useDoc(subscriptionRef);
+
+  if (subscription?.subscribed) {
+    return null;
+  }
+
+  return (
+    <>
+      <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic text-primary leading-none">
+        GET EXCLUSIVE DROPS <br /> & INSIDER ACCESS
+      </h3>
+      <NewsletterForm />
+    </>
   );
 }

@@ -1,8 +1,23 @@
+'use client';
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import Image from "next/image";
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export default function FreePage() {
+  const { user } = useUser();
+  const db = useFirestore();
+
+  const subscriptionRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'emails', user.uid);
+  }, [db, user]);
+
+  const { data: subscription } = useDoc(subscriptionRef);
+
   return (
     <div className="min-h-screen flex flex-col font-body bg-black">
       <Header />
@@ -59,38 +74,36 @@ export default function FreePage() {
         {/* Right Section: Subscription Form */}
         <div className="w-full lg:w-1/2 bg-primary flex flex-col items-center justify-center p-8 md:p-20">
           <div className="max-w-2xl w-full space-y-24">
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-[100px] font-black italic tracking-tighter leading-[0.85] text-black uppercase">
-                3 SOUNDS.<br />
-                EVERY WEEK.<br />
-                ZERO COST.
-              </h1>
-              
-              <p className="text-2xl md:text-3xl font-black italic tracking-tight text-blue-600 uppercase">
-                JOIN THE SONIC UNDERGROUND.
-              </p>
-            </div>
-
-            <form className="space-y-8">
-              <div className="space-y-6">
-                <div className="relative group">
-                  <input 
-                    type="text" 
-                    placeholder="NAME"
-                    className="w-full h-20 bg-transparent border-[6px] border-black rounded-full px-10 text-2xl font-black italic uppercase placeholder:text-black/30 outline-none focus:bg-white/10 transition-colors"
-                  />
-                </div>
-                <div className="relative group">
-                  <input 
-                    type="email" 
-                    placeholder="E-MAIL ADDRESS"
-                    className="w-full h-20 bg-transparent border-[6px] border-black rounded-full px-10 text-2xl font-black italic uppercase placeholder:text-black/30 outline-none focus:bg-white/10 transition-colors"
-                  />
-                </div>
+            {subscription?.subscribed ? (
+              <div className="space-y-4">
+                <h1 className="text-6xl md:text-[100px] font-black italic tracking-tighter leading-[0.85] text-black uppercase">
+                  YOU'RE IN.<br />
+                  WELCOME TO THE<br />
+                  VAULT.
+                </h1>
+                <p className="text-2xl md:text-3xl font-black italic tracking-tight text-blue-600 uppercase">
+                  CHECK YOUR INBOX FOR THE FIRST DROP.
+                </p>
               </div>
-              
-              <button className="hidden h-0 w-0" type="submit">SUBMIT</button>
-            </form>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  <h1 className="text-6xl md:text-[100px] font-black italic tracking-tighter leading-[0.85] text-black uppercase">
+                    3 SOUNDS.<br />
+                    EVERY WEEK.<br />
+                    ZERO COST.
+                  </h1>
+                  
+                  <p className="text-2xl md:text-3xl font-black italic tracking-tight text-blue-600 uppercase">
+                    JOIN THE SONIC UNDERGROUND.
+                  </p>
+                </div>
+
+                <div className="w-full">
+                  <NewsletterForm variant="contact" className="border-black text-black" />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

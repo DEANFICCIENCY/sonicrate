@@ -1,40 +1,46 @@
+'use client';
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ChevronsRight, Instagram, Youtube, MessageSquare, Globe } from "lucide-react";
+import { Instagram, Youtube, MessageSquare, Globe } from "lucide-react";
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 export default function ContactPage() {
+  const { user } = useUser();
+  const db = useFirestore();
+
+  const subscriptionRef = useMemoFirebase(() => {
+    if (!db || !user) return null;
+    return doc(db, 'emails', user.uid);
+  }, [db, user]);
+
+  const { data: subscription } = useDoc(subscriptionRef);
+
   return (
     <div className="min-h-screen flex flex-col font-body bg-black text-white selection:bg-primary selection:text-black">
       <Header />
       
       <main className="flex-grow">
         {/* Top Section: PLUG IN */}
-        <section className="py-24 flex flex-col items-center text-center space-y-12 px-4">
-          <h1 className="text-[15vw] font-black italic tracking-tighter leading-none text-primary drop-shadow-[0_0_20px_rgba(215,255,0,0.5)]">
-            PLUG IN
-          </h1>
+        {!subscription?.subscribed && (
+          <section className="py-24 flex flex-col items-center text-center space-y-12 px-4">
+            <h1 className="text-[15vw] font-black italic tracking-tighter leading-none text-primary drop-shadow-[0_0_20px_rgba(215,255,0,0.5)]">
+              PLUG IN
+            </h1>
 
-          <div className="w-full max-w-md">
-            <form className="relative flex items-center border-2 border-primary focus-within:border-primary transition-all p-1 bg-black">
-              <input 
-                type="email" 
-                placeholder="E-MAIL ADDRESS" 
-                className="w-full bg-transparent p-4 pl-6 text-xs font-black uppercase tracking-widest outline-none text-primary placeholder:text-primary/30"
-              />
-              <button className="bg-primary text-black px-6 h-12 hover:bg-white transition-colors">
-                <ChevronsRight size={24} strokeWidth={3} />
-              </button>
-            </form>
-          </div>
+            <NewsletterForm variant="contact" />
 
-          <p className="text-[10px] md:text-xs font-bold leading-relaxed opacity-60 uppercase tracking-widest max-w-2xl mx-auto px-4">
-            FORGET GENERIC MARKETING EMAILS. <br />
-            THIS IS EARLY ACCESS TO PACKS, REAL STUDIO KNOWLEDGE, A<br />
-            ND THE ANALOG SECRETS THAT SEPARATE YOUR SOUND FROM THE DIGITAL MASSES.<br />
-            WE RESPECT YOUR INBOX.<br />
-            ONLY ESSENTIAL DROPS, NO FLUFF.
-          </p>
-        </section>
+            <p className="text-[10px] md:text-xs font-bold leading-relaxed opacity-60 uppercase tracking-widest max-w-2xl mx-auto px-4">
+              FORGET GENERIC MARKETING EMAILS. <br />
+              THIS IS EARLY ACCESS TO PACKS, REAL STUDIO KNOWLEDGE, A<br />
+              ND THE ANALOG SECRETS THAT SEPARATE YOUR SOUND FROM THE DIGITAL MASSES.<br />
+              WE RESPECT YOUR INBOX.<br />
+              ONLY ESSENTIAL DROPS, NO FLUFF.
+            </p>
+          </section>
+        )}
 
         {/* Form Section: CONTACT (Neon Yellow) */}
         <section className="bg-primary text-black py-24 px-4 flex flex-col items-center">
