@@ -1,7 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Volume2, Box, Zap, Fingerprint, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,8 +28,8 @@ export default function Home() {
         {/* Hero Section */}
         <section className="bg-primary pt-24 pb-32 text-center">
           <div className="container mx-auto px-4 flex flex-col items-center space-y-12">
-            <h1 className="text-[12vw] font-black italic tracking-tighter leading-none text-foreground select-none">
-              SONICRATE <span className="text-[4vw] align-top not-italic">TM</span>
+            <h1 className="text-[12vw] font-black italic tracking-tighter leading-none text-foreground select-none flex items-start justify-center">
+              SONICRATE<span className="text-[3vw] not-italic leading-none mt-2">TM</span>
             </h1>
             
             <div className="max-w-3xl space-y-6">
@@ -62,7 +61,7 @@ export default function Home() {
             {featuredSounds.map((pack) => (
               <div key={pack.id} className="relative flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-0">
                 
-                {/* Massive Background Text - Moved further back and opacity refined */}
+                {/* Massive Background Text */}
                 <div className="absolute inset-0 flex flex-col justify-center pointer-events-none select-none -z-10 translate-x-[10%] lg:translate-x-[20%]">
                   <h2 className="text-[25vw] font-black text-white uppercase tracking-tighter leading-[0.7] opacity-80 whitespace-nowrap">
                     FEATURED
@@ -72,10 +71,10 @@ export default function Home() {
                   </h2>
                 </div>
 
-                {/* Content Overlay - Elevated z-index */}
+                {/* Content Overlay */}
                 <div className="relative z-20 w-full flex flex-col lg:flex-row items-center lg:items-end justify-center gap-12 lg:gap-24">
                   
-                  {/* Image with precise border */}
+                  {/* Image */}
                   <div className="relative w-full max-w-[500px] aspect-square border-[16px] border-[#1a1a1a] flex-shrink-0 shadow-2xl">
                     <Image 
                       src={pack.imageUrl} 

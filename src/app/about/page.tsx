@@ -60,8 +60,8 @@ export default function AboutPage() {
           {/* Left Column: Text */}
           <div className="w-full lg:w-1/2 p-8 md:p-20 flex flex-col items-center justify-center text-center space-y-16">
             <div className="space-y-4">
-              <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter leading-none">
-                SONICRATE<span className="text-2xl align-top not-italic">TM</span>
+              <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter leading-none flex items-start justify-center">
+                SONICRATE<span className="text-2xl not-italic leading-none mt-2">TM</span>
               </h1>
             </div>
 
@@ -98,7 +98,7 @@ export default function AboutPage() {
           <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-20">
             {/* Massive FAQ Text */}
             <div className="lg:sticky lg:top-40">
-              <h2 className="text-[15vw] lg:text-[10vw] font-black italic tracking-tighter uppercase leading-[0.7] opacity-100 italic">
+              <h2 className="text-[15vw] lg:text-[10vw] font-black italic tracking-tighter uppercase leading-[0.7] opacity-100">
                 FAQS
               </h2>
             </div>
@@ -122,7 +122,7 @@ export default function AboutPage() {
         {/* What Matters Section */}
         <section className="bg-primary py-32">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-6xl md:text-[8vw] font-black italic tracking-tighter uppercase leading-none mb-24 italic">
+            <h2 className="text-6xl md:text-[8vw] font-black italic tracking-tighter uppercase leading-none mb-24">
               WHAT MATTERS?
             </h2>
 
