@@ -38,8 +38,8 @@ export function Footer() {
           
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
              <div className="flex flex-col gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
-              <Link href="#" className="hover:text-white transition-colors">CREATIVE RIGHTS (license agreement)</Link>
-              <Link href="#" className="hover:text-white transition-colors">YOUR PRIVACY (privacy policy)</Link>
+              <Link href="/license" className="hover:text-white transition-colors">CREATIVE RIGHTS (license agreement)</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">YOUR PRIVACY (privacy policy)</Link>
             </div>
 
             <div className="p-4 bg-primary text-black rounded-full shadow-[0_0_20px_rgba(215,255,0,0.3)]">
@@ -47,8 +47,8 @@ export function Footer() {
             </div>
 
             <div className="flex flex-col gap-2 text-[9px] font-black uppercase tracking-widest text-primary">
-              <Link href="#" className="hover:text-white transition-colors">DIGITAL GOODS POLICY (refund policy)</Link>
-              <Link href="#" className="hover:text-white transition-colors">THE ESSENTIALS (FAQ)</Link>
+              <Link href="/refund" className="hover:text-white transition-colors">DIGITAL GOODS POLICY (refund policy)</Link>
+              <Link href="/about#faq" className="hover:text-white transition-colors">THE ESSENTIALS (FAQ)</Link>
             </div>
           </div>
         </div>
