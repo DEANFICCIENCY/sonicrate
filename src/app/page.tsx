@@ -97,23 +97,6 @@ export default function Home() {
                         {pack.description}
                       </p>
                     </div>
-                    
-                    {/* Stylized Waveform */}
-                    <div className="flex gap-1 h-12 items-center">
-                      {Array.from({ length: 24 }).map((_, i) => (
-                        <div 
-                          key={i} 
-                          className="w-[2px] bg-white/60" 
-                          style={{ 
-                            height: `${20 + Math.sin(i * 0.8) * 60}%` 
-                          }} 
-                        />
-                      ))}
-                    </div>
-
-                    <Button className="bg-black text-primary font-black italic text-3xl uppercase tracking-tighter px-16 h-20 rounded-none hover:bg-black/90 transition-colors border border-primary/30">
-                      ADD +
-                    </Button>
                   </div>
                 </div>
               </div>
