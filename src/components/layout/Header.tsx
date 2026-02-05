@@ -21,19 +21,24 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export function Header() {
   const auth = useAuth();
-  const { user, loading } = useUser();
+  const { user, isUserLoading: loading } = useUser();
   const { toast } = useToast();
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [mounted, setMounted] = useState(false);
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleGoogleSignIn = async () => {
     if (!auth || isSigningIn) return;
@@ -128,7 +133,7 @@ export function Header() {
             <ShoppingBag size={24} className="text-black" />
           </div>
 
-          {!loading && (
+          {mounted && !loading && (
             user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="outline-none">

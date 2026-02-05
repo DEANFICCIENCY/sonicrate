@@ -5,6 +5,7 @@ import { Youtube, Instagram, Music2 } from "lucide-react";
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
 
 export function Footer() {
   return (
@@ -57,6 +58,11 @@ function NewsletterSectionWrapper() {
 function NewsletterContentWithHeader() {
   const { user } = useUser();
   const db = useFirestore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const subscriptionRef = useMemoFirebase(() => {
     if (!db || !user) return null;
@@ -65,7 +71,7 @@ function NewsletterContentWithHeader() {
 
   const { data: subscription } = useDoc(subscriptionRef);
 
-  if (subscription?.subscribed) {
+  if (!mounted || subscription?.subscribed) {
     return null;
   }
 

@@ -6,10 +6,16 @@ import { Instagram, Youtube, MessageSquare, Globe } from "lucide-react";
 import { NewsletterForm } from "@/components/newsletter/NewsletterForm";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
+import { useState, useEffect } from "react";
 
 export default function ContactPage() {
   const { user } = useUser();
   const db = useFirestore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const subscriptionRef = useMemoFirebase(() => {
     if (!db || !user) return null;
@@ -24,7 +30,7 @@ export default function ContactPage() {
       
       <main className="flex-grow">
         {/* Top Section: PLUG IN */}
-        {!subscription?.subscribed && (
+        {mounted && !subscription?.subscribed && (
           <section className="py-24 flex flex-col items-center text-center space-y-12 px-4">
             <h1 className="text-[15vw] font-black italic tracking-tighter leading-none text-primary drop-shadow-[0_0_20px_rgba(215,255,0,0.5)]">
               PLUG IN

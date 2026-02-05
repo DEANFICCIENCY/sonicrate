@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronsRight } from 'lucide-react';
-import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -20,6 +20,11 @@ export function NewsletterForm({ variant = 'default', className }: NewsletterFor
   const { toast } = useToast();
   const [emailInput, setEmailInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Memoize the document reference for the user's subscription status
   const subscriptionRef = useMemoFirebase(() => {
@@ -29,8 +34,8 @@ export function NewsletterForm({ variant = 'default', className }: NewsletterFor
 
   const { data: subscription, isLoading } = useDoc(subscriptionRef);
 
-  // If the user is already subscribed, hide the entire component
-  if (subscription?.subscribed) {
+  // If the user is already subscribed or we haven't mounted yet, hide the entire component
+  if (!mounted || subscription?.subscribed) {
     return null;
   }
 
