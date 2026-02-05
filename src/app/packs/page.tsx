@@ -57,7 +57,7 @@ export default function PacksPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border-none">
+              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary/30">
                 ADD TO CART
               </Button>
 

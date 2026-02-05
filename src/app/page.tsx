@@ -111,7 +111,7 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <Button className="bg-black text-primary font-black italic text-3xl uppercase tracking-tighter px-16 h-20 rounded-none hover:bg-black/90 transition-colors border-none">
+                    <Button className="bg-black text-primary font-black italic text-3xl uppercase tracking-tighter px-16 h-20 rounded-none hover:bg-black/90 transition-colors border border-primary/30">
                       ADD +
                     </Button>
                   </div>
