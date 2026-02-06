@@ -61,7 +61,6 @@ export default function AdminPage() {
     
     if (name.startsWith('tech-')) {
       const field = name.split('tech-')[1];
-      // Logic to detect if input is a number
       const numValue = value === '' ? 0 : Number(value);
       if (isNaN(numValue)) return;
       
@@ -113,7 +112,7 @@ export default function AdminPage() {
       const productRef = doc(db, 'products', formData.id);
       await setDoc(productRef, {
         ...formData,
-        tracks: tracks.filter(t => t.name) // Only save tracks with names
+        tracks: tracks.filter(t => t.name)
       }, { merge: true });
 
       toast({
@@ -169,7 +168,6 @@ export default function AdminPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-24">
-          {/* Basic Info */}
           <section className="space-y-12">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">01. PRODUCT IDENTITY</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -235,7 +233,6 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Pricing */}
           <section className="space-y-12">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">02. PRICING & VALUE</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -275,7 +272,6 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Description */}
           <section className="space-y-12">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">03. THE NARRATIVE</h2>
             <div className="space-y-8">
@@ -303,7 +299,6 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Technical Info */}
           <section className="space-y-12">
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">04. TECHNICAL SPECS</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -323,17 +318,15 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Tracks */}
           <section className="space-y-12">
             <div className="flex items-center justify-between border-l-4 border-primary pl-6">
               <h2 className="text-3xl font-black italic uppercase tracking-tighter">05. TRACK PREVIEWS</h2>
               <Button 
                 type="button" 
                 onClick={addTrack} 
-                variant="outline" 
-                className="opacity-25 hover:opacity-100 border-primary text-primary hover:bg-primary hover:text-black rounded-none transition-all duration-300"
+                className="bg-primary text-white rounded-none hover:bg-primary/90 transition-transform hover:scale-105 h-16 px-10 text-xl font-black italic uppercase tracking-tighter"
               >
-                <Plus size={20} className="mr-2" /> ADD TRACK
+                <Plus size={24} className="mr-2" /> ADD TRACK
               </Button>
             </div>
             
@@ -366,7 +359,6 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Submit - Styled like the SHOP button with border */}
           <div className="pt-12 pb-24">
             <Button 
               type="submit" 
