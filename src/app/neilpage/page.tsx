@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -10,13 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Save, Lock } from "lucide-react";
+import { Plus, Trash2, Save, Lock, Upload, Image as ImageIcon } from "lucide-react";
+import Image from 'next/image';
 
 export default function AdminPage() {
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -56,17 +58,41 @@ export default function AdminPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    
     if (name.startsWith('tech-')) {
       const field = name.split('tech-')[1];
+      // Logic to detect if input is a number
+      const numValue = value === '' ? 0 : Number(value);
+      if (isNaN(numValue)) return;
+      
       setFormData(prev => ({
         ...prev,
-        technicalInfo: { ...prev.technicalInfo, [field]: Number(value) }
+        technicalInfo: { ...prev.technicalInfo, [field]: numValue }
       }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: name === 'price' || name === 'discountedPrice' || name === 'saveAmount' ? Number(value) : value
-      }));
+      const numberFields = ['price', 'discountedPrice', 'saveAmount'];
+      if (numberFields.includes(name)) {
+        const numValue = value === '' ? 0 : Number(value);
+        if (isNaN(numValue)) return;
+        setFormData(prev => ({ ...prev, [name]: numValue }));
+      } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, image: reader.result as string }));
+        toast({
+          title: "IMAGE SELECTED",
+          description: "FILE HAS BEEN PREPARED FOR UPLOAD.",
+        });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -92,7 +118,7 @@ export default function AdminPage() {
 
       toast({
         title: "PRODUCT SAVED",
-        description: `Successfully updated ${formData.title.toUpperCase()}`,
+        description: `Successfully updated ${formData.title.toUpperCase() || 'PRODUCT'}`,
       });
     } catch (error: any) {
       toast({
@@ -148,20 +174,63 @@ export default function AdminPage() {
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">01. PRODUCT IDENTITY</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-primary">DOC ID (e.g. basement-tapes)</label>
-                <Input name="id" value={formData.id} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-primary">DOC ID (DB REFERENCE)</label>
+                <Input 
+                  name="id" 
+                  value={formData.id} 
+                  onChange={handleInputChange} 
+                  placeholder="e.g. basement-tapes"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">TITLE</label>
-                <Input name="title" value={formData.title} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase focus:border-primary transition-all" />
+                <Input 
+                  name="title" 
+                  value={formData.title} 
+                  onChange={handleInputChange} 
+                  placeholder="e.g. THE BASEMENT TAPES"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">CATEGORY</label>
-                <Input name="category" value={formData.category} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase focus:border-primary transition-all" />
+                <Input 
+                  name="category" 
+                  value={formData.category} 
+                  onChange={handleInputChange} 
+                  placeholder="e.g. EXPERIMENTAL / INDIE SUITE"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" 
+                />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-primary">IMAGE URL (PICSUM OR UNSPLASH)</label>
-                <Input name="image" value={formData.image} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-sm font-mono focus:border-primary transition-all" />
+                <label className="text-[10px] font-black uppercase tracking-widest text-primary">PRODUCT ARTWORK</label>
+                <div className="flex gap-4 items-center">
+                  <div className="relative h-16 w-16 bg-white/5 border-2 border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
+                    {formData.image ? (
+                      <Image src={formData.image} alt="Preview" fill className="object-cover" />
+                    ) : (
+                      <ImageIcon className="text-white/10" size={24} />
+                    )}
+                  </div>
+                  <div className="flex-grow">
+                    <input 
+                      type="file" 
+                      ref={fileInputRef}
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleFileChange} 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full flex items-center justify-center h-16 bg-white/5 border-2 border-white/10 rounded-none text-xs font-black italic uppercase cursor-pointer hover:border-primary hover:text-primary transition-all px-8 text-center"
+                    >
+                      <Upload size={18} className="mr-2" />
+                      {formData.image ? "CHANGE IMAGE" : "SELECT FILE FROM PC"}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -172,15 +241,36 @@ export default function AdminPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">BASE PRICE ($)</label>
-                <Input type="number" name="price" value={formData.price} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-primary" />
+                <Input 
+                  type="number" 
+                  name="price" 
+                  value={formData.price || ''} 
+                  onChange={handleInputChange} 
+                  placeholder="100"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-primary placeholder:text-primary/10" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">DISCOUNTED PRICE ($)</label>
-                <Input type="number" name="discountedPrice" value={formData.discountedPrice} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-blue-500" />
+                <Input 
+                  type="number" 
+                  name="discountedPrice" 
+                  value={formData.discountedPrice || ''} 
+                  onChange={handleInputChange} 
+                  placeholder="40"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-blue-500 placeholder:text-blue-500/10" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">SAVE AMOUNT ($)</label>
-                <Input type="number" name="saveAmount" value={formData.saveAmount} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-white" />
+                <Input 
+                  type="number" 
+                  name="saveAmount" 
+                  value={formData.saveAmount || ''} 
+                  onChange={handleInputChange} 
+                  placeholder="60"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-3xl font-black text-white placeholder:text-white/10" 
+                />
               </div>
             </div>
           </section>
@@ -191,11 +281,24 @@ export default function AdminPage() {
             <div className="space-y-8">
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">DESCRIPTION TITLE</label>
-                <Input name="descTitle" value={formData.descTitle} onChange={handleInputChange} className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase" />
+                <Input 
+                  name="descTitle" 
+                  value={formData.descTitle} 
+                  onChange={handleInputChange} 
+                  placeholder="e.g. THE RUNDOWN"
+                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10" 
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">DESCRIPTION BODY</label>
-                <Textarea name="description" value={formData.description} onChange={handleInputChange} rows={6} className="bg-white/5 border-2 border-white/10 rounded-none text-sm font-bold uppercase tracking-wider leading-relaxed p-6" />
+                <Textarea 
+                  name="description" 
+                  value={formData.description} 
+                  onChange={handleInputChange} 
+                  rows={6} 
+                  placeholder="DESCRIBE THE SONIC TEXTURE..."
+                  className="bg-white/5 border-2 border-white/10 rounded-none text-sm font-bold uppercase tracking-wider leading-relaxed p-6 placeholder:text-white/10" 
+                />
               </div>
             </div>
           </section>
@@ -210,9 +313,10 @@ export default function AdminPage() {
                   <Input 
                     type="number" 
                     name={`tech-${key}`} 
-                    value={(formData.technicalInfo as any)[key]} 
+                    value={(formData.technicalInfo as any)[key] || ''} 
                     onChange={handleInputChange} 
-                    className="h-12 bg-white/5 border border-white/10 rounded-none text-xl font-black"
+                    placeholder="0"
+                    className="h-12 bg-white/5 border border-white/10 rounded-none text-xl font-black placeholder:text-white/10"
                   />
                 </div>
               ))}
@@ -223,7 +327,12 @@ export default function AdminPage() {
           <section className="space-y-12">
             <div className="flex items-center justify-between border-l-4 border-primary pl-6">
               <h2 className="text-3xl font-black italic uppercase tracking-tighter">05. TRACK PREVIEWS</h2>
-              <Button type="button" onClick={addTrack} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-black rounded-none">
+              <Button 
+                type="button" 
+                onClick={addTrack} 
+                variant="outline" 
+                className="opacity-10 hover:opacity-100 border-primary text-primary hover:bg-primary hover:text-black rounded-none transition-all duration-300"
+              >
                 <Plus size={20} className="mr-2" /> ADD TRACK
               </Button>
             </div>
@@ -231,10 +340,25 @@ export default function AdminPage() {
             <div className="space-y-4">
               {tracks.map((track, index) => (
                 <div key={index} className="flex gap-4 items-center bg-white/5 p-4 border border-white/10">
-                  <Input placeholder="TRACK NAME" value={track.name} onChange={(e) => handleTrackChange(index, 'name', e.target.value)} className="bg-transparent border-none rounded-none text-lg font-black italic uppercase" />
-                  <Input placeholder="BPM" value={track.bpm} onChange={(e) => handleTrackChange(index, 'bpm', e.target.value)} className="w-24 bg-transparent border-none rounded-none text-lg font-black" />
-                  <Input placeholder="KEY" value={track.key} onChange={(e) => handleTrackChange(index, 'key', e.target.value)} className="w-24 bg-transparent border-none rounded-none text-lg font-black" />
-                  <button type="button" onClick={() => removeTrack(index)} className="text-red-500 hover:text-white transition-colors">
+                  <Input 
+                    placeholder="TRACK NAME (e.g. BLOSSOM)" 
+                    value={track.name} 
+                    onChange={(e) => handleTrackChange(index, 'name', e.target.value)} 
+                    className="bg-transparent border-none rounded-none text-lg font-black italic uppercase placeholder:text-white/10" 
+                  />
+                  <Input 
+                    placeholder="BPM" 
+                    value={track.bpm} 
+                    onChange={(e) => handleTrackChange(index, 'bpm', e.target.value)} 
+                    className="w-24 bg-transparent border-none rounded-none text-lg font-black placeholder:text-white/10" 
+                  />
+                  <Input 
+                    placeholder="KEY" 
+                    value={track.key} 
+                    onChange={(e) => handleTrackChange(index, 'key', e.target.value)} 
+                    className="w-24 bg-transparent border-none rounded-none text-lg font-black placeholder:text-white/10" 
+                  />
+                  <button type="button" onClick={() => removeTrack(index)} className="text-red-500 hover:text-white transition-colors p-2">
                     <Trash2 size={24} />
                   </button>
                 </div>
@@ -242,9 +366,12 @@ export default function AdminPage() {
             </div>
           </section>
 
-          {/* Submit */}
+          {/* Submit - Styled like the SHOP button with border */}
           <div className="pt-12 pb-24">
-            <Button type="submit" className="w-full h-24 bg-primary text-black hover:bg-white rounded-none text-4xl font-black italic uppercase tracking-tighter shadow-[12px_12px_0px_0px_rgba(215,255,0,0.3)] transition-all flex gap-6">
+            <Button 
+              type="submit" 
+              className="w-full h-24 bg-black text-primary border-4 border-primary hover:bg-primary hover:text-black rounded-none text-4xl font-black italic uppercase tracking-tighter shadow-[12px_12px_0px_0px_rgba(215,255,0,0.3)] transition-all flex gap-6"
+            >
               <Save size={40} />
               PUBLISH TO VAULT
             </Button>
