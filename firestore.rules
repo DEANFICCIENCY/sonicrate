@@ -15,12 +15,18 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // --- NEWSLETTER RULES ---
+    function isAdmin() {
+      return isSignedIn() && get(/databases/$(database)/documents/emails/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // --- NEWSLETTER & USER DATA RULES ---
     match /emails/{emailId} {
       allow get: if isOwner(emailId);
       allow list: if isOwner(emailId);
-      allow create: if isOwner(emailId) && request.resource.data.id == emailId;
-      allow update: if isOwner(emailId) && request.resource.data.id == resource.data.id;
+      // Allow creation for self. Role cannot be set by user during creation unless they are admin (which is circular, so we stick to owner for base fields).
+      // We prevent users from escalating their own role.
+      allow create: if isOwner(emailId) && (!('role' in request.resource.data) || request.resource.data.role == 'user');
+      allow update: if isOwner(emailId) && (!('role' in request.resource.data) || request.resource.data.role == resource.data.role);
       allow delete: if isOwner(emailId);
     }
 
@@ -28,10 +34,10 @@ service cloud.firestore {
     match /products/{productId} {
       /**
        * @description Products are publicly readable.
-       * Writes are denied (managed via admin or console).
+       * Writes are allowed only for users with the 'admin' role in /emails/{uid}.
        */
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     // --- DEFAULT DENY ---
