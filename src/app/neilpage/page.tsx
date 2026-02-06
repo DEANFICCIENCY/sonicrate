@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,7 +33,7 @@ export default function AdminPage() {
 
   // Form State
   const [formData, setFormData] = useState({
-    id: 'basement-tapes',
+    id: '',
     title: '',
     category: '',
     image: '',
@@ -106,13 +106,21 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!db) return;
+    if (!db || !formData.id) {
+      toast({
+        variant: "destructive",
+        title: "REQUIRED FIELD",
+        description: "PLEASE ENTER A DOC ID.",
+      });
+      return;
+    }
 
     try {
       const productRef = doc(db, 'products', formData.id);
       await setDoc(productRef, {
         ...formData,
-        tracks: tracks.filter(t => t.name)
+        tracks: tracks.filter(t => t.name),
+        createdAt: serverTimestamp()
       }, { merge: true });
 
       toast({
@@ -324,7 +332,7 @@ export default function AdminPage() {
               <Button 
                 type="button" 
                 onClick={addTrack} 
-                className="bg-primary text-white rounded-none hover:bg-primary/90 transition-transform hover:scale-105 h-16 px-10 text-xl font-black italic uppercase tracking-tighter"
+                className="bg-primary text-white rounded-none hover:bg-primary/90 transition-all hover:scale-105 h-16 px-10 text-xl font-black italic uppercase tracking-tighter"
               >
                 <Plus size={24} className="mr-2" /> ADD TRACK
               </Button>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Header } from "@/components/layout/Header";
@@ -6,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Box, Zap, Fingerprint, Lock, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
-import { doc, collection } from 'firebase/firestore';
-import { useState, useEffect, Suspense } from "react";
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { useState, useEffect, Suspense, useMemo } from "react";
 import { useSearchParams } from 'next/navigation';
 
 function PacksContent() {
@@ -16,30 +17,36 @@ function PacksContent() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
 
-  // Get product ID from URL or default to 'basement-tapes'
-  const productId = searchParams.get('id') || 'basement-tapes';
+  // Get requested product ID from URL
+  const requestedId = searchParams.get('id');
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Fetch the specific product for the main display
-  const productRef = useMemoFirebase(() => {
-    if (!db) return null;
-    return doc(db, 'products', productId);
-  }, [db, productId]);
-
-  const { data: product, isLoading: isProductLoading } = useDoc(productRef);
-
-  // Fetch all products for the suggestions section
+  // Fetch all products ordered by creation date to find the "newest"
   const productsQuery = useMemoFirebase(() => {
     if (!db) return null;
-    return collection(db, 'products');
+    return query(collection(db, 'products'), orderBy('createdAt', 'desc'));
   }, [db]);
 
-  const { data: allProducts, isLoading: isCollectionLoading } = useCollection(productsQuery);
+  const { data: allProducts, isLoading } = useCollection(productsQuery);
 
-  if (!mounted || isProductLoading || isCollectionLoading) {
+  // Determine which product to display
+  const product = useMemo(() => {
+    if (!allProducts || allProducts.length === 0) return null;
+    
+    // 1. If ID requested in URL, find it
+    if (requestedId) {
+      const found = allProducts.find(p => p.id === requestedId);
+      if (found) return found;
+    }
+
+    // 2. Default: newest created (first in our sorted list)
+    return allProducts[0];
+  }, [allProducts, requestedId]);
+
+  if (!mounted || isLoading) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -47,23 +54,24 @@ function PacksContent() {
     );
   }
 
-  // If the product isn't found in the DB, we can show a placeholder or a 404
+  // If no products exist in the database at all
   if (!product) {
     return (
       <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center space-y-8 p-4 text-center">
-        <h1 className="text-4xl font-black uppercase italic tracking-tighter">PRODUCT NOT FOUND</h1>
+        <h1 className="text-4xl font-black uppercase italic tracking-tighter">THE VAULT IS EMPTY</h1>
         <p className="text-xs opacity-40 font-bold tracking-widest uppercase max-w-sm">
-          THE REQUESTED SONIC ASSET ("{productId}") DOES NOT EXIST IN THE VAULT YET.
+          NO SONIC ASSETS HAVE BEEN PUBLISHED YET. <br />
+          CHECK BACK SOON FOR THE FIRST DROP.
         </p>
         <Button asChild className="bg-primary text-black hover:bg-white">
-          <Link href="/packs">BACK TO PACKS</Link>
+          <Link href="/">BACK TO HOME</Link>
         </Button>
       </div>
     );
   }
 
   // Filter out the currently displayed product from suggestions
-  const suggestions = allProducts?.filter(p => p.id !== productId) || [];
+  const suggestions = allProducts?.filter(p => p.id !== product.id) || [];
 
   return (
     <div className="min-h-screen flex flex-col font-body bg-black text-white selection:bg-primary selection:text-black">

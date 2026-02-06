@@ -66,6 +66,11 @@
         "description": {
           "type": "string"
         },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the product was created."
+        },
         "tracks": {
           "type": "array",
           "items": {
