@@ -331,7 +331,7 @@ export default function AdminPage() {
                 type="button" 
                 onClick={addTrack} 
                 variant="outline" 
-                className="opacity-10 hover:opacity-100 border-primary text-primary hover:bg-primary hover:text-black rounded-none transition-all duration-300"
+                className="opacity-25 hover:opacity-100 border-primary text-primary hover:bg-primary hover:text-black rounded-none transition-all duration-300"
               >
                 <Plus size={20} className="mr-2" /> ADD TRACK
               </Button>
