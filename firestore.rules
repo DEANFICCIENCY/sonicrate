@@ -1,20 +1,11 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
      * FIRESTORE SECURITY RULES
-     * 
-     * Core Philosophy:
-     * This ruleset implements a strict User-Ownership model. Access is restricted to 
-     * authenticated users managing their own subscription data.
-     * 
-     * Data Structure:
-     * The primary data resides in the `/emails` collection, where the document ID
-     * corresponds to the user's authenticated UID.
      */
-
-    // --- GLOBAL HELPER FUNCTIONS ---
 
     function isSignedIn() {
       return request.auth != null;
@@ -24,27 +15,23 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    function isExistingOwner(userId) {
-      return resource != null && isOwner(userId);
-    }
-
-    // --- COLLECTION RULES ---
-
+    // --- NEWSLETTER RULES ---
     match /emails/{emailId} {
-      /**
-       * @description Rules for managing user newsletter subscriptions.
-       * Users can only read, create, or update their own subscription record.
-       */
       allow get: if isOwner(emailId);
       allow list: if isOwner(emailId);
-      
-      // Ensure the 'id' field in the document matches the document ID (UID)
       allow create: if isOwner(emailId) && request.resource.data.id == emailId;
-      
-      // Ensure ownership is maintained during updates
-      allow update: if isExistingOwner(emailId) && request.resource.data.id == resource.data.id;
-      
-      allow delete: if isExistingOwner(emailId);
+      allow update: if isOwner(emailId) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(emailId);
+    }
+
+    // --- PRODUCT RULES ---
+    match /products/{productId} {
+      /**
+       * @description Products are publicly readable.
+       * Writes are denied (managed via admin or console).
+       */
+      allow read: if true;
+      allow write: if false;
     }
 
     // --- DEFAULT DENY ---

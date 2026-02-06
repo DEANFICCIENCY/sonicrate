@@ -1,16 +1,75 @@
+
+'use client';
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Box, Zap, Fingerprint, Lock, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc } from 'firebase/firestore';
+import { useState, useEffect } from "react";
 
 export default function PacksPage() {
+  const db = useFirestore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // We simulate the "main" product by fetching a specific ID from the 'products' collection.
+  const productRef = useMemoFirebase(() => {
+    if (!db) return null;
+    return doc(db, 'products', 'basement-tapes');
+  }, [db]);
+
+  const { data: product, isLoading } = useDoc(productRef);
+
   const suggestedPacks = [
     { id: "s1", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s1/400/400", save: 60 },
     { id: "s2", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s2/400/400", save: 60 },
     { id: "s3", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s3/400/400", save: 60 },
   ];
+
+  if (!mounted || isLoading) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Fallback if the product doesn't exist yet in the database
+  const displayProduct = product || {
+    title: "BASEMENT TAPES",
+    category: "EXPERIMENTAL / INDIE SUITE",
+    image: "https://picsum.photos/seed/basement-main/800/800",
+    price: 100,
+    discountedPrice: 40,
+    saveAmount: 60,
+    descTitle: "THE RUNDOWN",
+    description: "Months of live recording, analog processing, and basement sessions in one kit. In-sounds-distortion factor loops with lo-fi stone concrete-room drum breaks, detailed synth pads, experimental bass, and atmospheric noise. Organised by key and BPM. Recorded through real gear in real spaces with adding warmth digital can't touch. Producer-ready textures for shoegaze, post-punk, dream pop, grunge, and experimental indie.",
+    tracks: [
+      { name: "BLAH", bpm: "100", key: "EMIN" },
+      { name: "BLAH", bpm: "120", key: "CMAJ" },
+      { name: "BLAH", bpm: "95", key: "GMIN" },
+      { name: "BLAH", bpm: "140", key: "DMIN" },
+      { name: "BLAH", bpm: "110", key: "AMAJ" },
+      { name: "BLAH", bpm: "130", key: "FMIN" }
+    ],
+    technicalInfo: {
+      totalSounds: 417,
+      melodyLoops: 20,
+      drumLoops: 18,
+      projectMixTemplates: 3,
+      drumSounds: 250,
+      percLoops: 85,
+      drumFills: 30,
+      drumMidi: 30
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col font-body bg-black text-white">
@@ -25,8 +84,8 @@ export default function PacksPage() {
               <div className="absolute inset-0 bg-primary/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative border-4 border-white/10 p-2 bg-black/40 backdrop-blur-sm shadow-2xl overflow-hidden">
                 <Image 
-                  src="https://picsum.photos/seed/basement-main/800/800" 
-                  alt="Basement Tapes CD" 
+                  src={displayProduct.image} 
+                  alt={displayProduct.title} 
                   width={800}
                   height={800}
                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
@@ -42,18 +101,18 @@ export default function PacksPage() {
               <div className="space-y-2">
                 <p className="text-xs font-black italic tracking-widest text-center lg:text-left">SONICRATE</p>
                 <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase leading-none text-blue-600 text-center lg:text-left">
-                  "BASEMENT TAPES"
+                  "{displayProduct.title}"
                 </h1>
                 <p className="text-xl md:text-2xl font-black uppercase tracking-tight text-center lg:text-left">
-                  EXPERIMENTAL / INDIE SUITE
+                  {displayProduct.category}
                 </p>
               </div>
 
               <div className="flex items-center justify-center lg:justify-start gap-4">
-                <span className="text-3xl font-bold line-through opacity-50">$100</span>
-                <span className="text-6xl font-black text-blue-600">$40</span>
+                <span className="text-3xl font-bold line-through opacity-50">${displayProduct.price}</span>
+                <span className="text-6xl font-black text-blue-600">${displayProduct.discountedPrice}</span>
                 <div className="bg-white px-3 py-1 text-xs font-black uppercase tracking-widest border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                  SAVE $60
+                  SAVE ${displayProduct.saveAmount}
                 </div>
               </div>
 
@@ -63,7 +122,7 @@ export default function PacksPage() {
 
               {/* Waveforms Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-4">
-                {Array.from({ length: 6 }).map((_, i) => (
+                {(displayProduct.tracks || []).map((track: any, i: number) => (
                   <div key={i} className="space-y-2">
                     <div className="h-10 flex gap-[2px] items-center">
                       {Array.from({ length: 15 }).map((_, j) => (
@@ -75,7 +134,7 @@ export default function PacksPage() {
                       ))}
                     </div>
                     <p className="text-[10px] font-black uppercase tracking-tighter opacity-70">
-                      'BLAH' - 100 BPM - EMIN
+                      '{track.name}' - {track.bpm} BPM - {track.key}
                     </p>
                   </div>
                 ))}
@@ -83,24 +142,20 @@ export default function PacksPage() {
 
               {/* The Rundown */}
               <div className="space-y-6 pt-8 border-t border-black/10">
-                <h3 className="text-3xl font-black italic tracking-tighter uppercase">THE RUNDOWN</h3>
+                <h3 className="text-3xl font-black italic tracking-tighter uppercase">{displayProduct.descTitle || "THE RUNDOWN"}</h3>
                 <p className="text-xs font-bold leading-relaxed opacity-80 uppercase">
-                  Months of live recording, analog processing, and basement sessions in one kit. 
-                  In-sounds-distortion factor loops with lo-fi stone concrete-room drum breaks, detailed synth pads, 
-                  experimental bass, and atmospheric noise. Organised by key and BPM. 
-                  Recorded through real gear in real spaces with adding warmth digital can't touch. 
-                  Producer-ready textures for shoegaze, post-punk, dream pop, grunge, and experimental indie.
+                  {displayProduct.description}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-[11px] font-black uppercase">
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>TOTAL SOUNDS:</span> <span>417</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>MELODY LOOPS:</span> <span>20+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM LOOPS:</span> <span>18</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>PROJECT / MIX TEMPLATES:</span> <span>3</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM SOUNDS:</span> <span>250+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>PERC LOOPS:</span> <span>85+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM FILLS:</span> <span>30+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM MIDI:</span> <span>30+</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>TOTAL SOUNDS:</span> <span>{displayProduct.technicalInfo?.totalSounds}</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>MELODY LOOPS:</span> <span>{displayProduct.technicalInfo?.melodyLoops}+</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM LOOPS:</span> <span>{displayProduct.technicalInfo?.drumLoops}</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>PROJECT / MIX TEMPLATES:</span> <span>{displayProduct.technicalInfo?.projectMixTemplates}</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM SOUNDS:</span> <span>{displayProduct.technicalInfo?.drumSounds}+</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>PERC LOOPS:</span> <span>{displayProduct.technicalInfo?.percLoops}+</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM FILLS:</span> <span>{displayProduct.technicalInfo?.drumFills}+</span></div>
+                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM MIDI:</span> <span>{displayProduct.technicalInfo?.drumMidi}+</span></div>
                 </div>
 
                 <p className="text-[8px] font-black text-center opacity-60 pt-4 uppercase tracking-widest">
