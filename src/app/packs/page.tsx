@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Header } from "@/components/layout/Header";
@@ -7,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Box, Zap, Fingerprint, Lock, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
 import { useState, useEffect } from "react";
 
 export default function PacksPage() {
@@ -19,20 +18,23 @@ export default function PacksPage() {
     setMounted(true);
   }, []);
 
+  // Fetch the main featured product
   const productRef = useMemoFirebase(() => {
     if (!db) return null;
     return doc(db, 'products', 'basement-tapes');
   }, [db]);
 
-  const { data: product, isLoading } = useDoc(productRef);
+  const { data: product, isLoading: isProductLoading } = useDoc(productRef);
 
-  const suggestedPacks = [
-    { id: "s1", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s1/400/400", save: 60 },
-    { id: "s2", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s2/400/400", save: 60 },
-    { id: "s3", title: "O'NEIL | 'BASEMENT TAPES'", category: "EXPERIMENTAL / INDIE SUITE", price: 40, oldPrice: 100, imageUrl: "https://picsum.photos/seed/s3/400/400", save: 60 },
-  ];
+  // Fetch all products for the suggestions section
+  const productsQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return collection(db, 'products');
+  }, [db]);
 
-  if (!mounted || isLoading) {
+  const { data: allProducts, isLoading: isCollectionLoading } = useCollection(productsQuery);
+
+  if (!mounted || isProductLoading || isCollectionLoading) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -68,6 +70,9 @@ export default function PacksPage() {
       drumMidi: 30
     }
   };
+
+  // Filter out the main product from suggestions if it exists
+  const suggestions = allProducts?.filter(p => p.id !== 'basement-tapes') || [];
 
   return (
     <div className="min-h-screen flex flex-col font-body bg-black text-white">
@@ -114,7 +119,7 @@ export default function PacksPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-24 text-4xl font-black italic uppercase tracking-tighter transition-all px-16 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)]">
+              <Button className="w-full bg-black text-primary border-4 border-primary hover:bg-black/90 rounded-none h-24 text-4xl font-black italic uppercase tracking-tighter transition-all px-16 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)]">
                 ADD TO CART
               </Button>
 
@@ -172,7 +177,7 @@ export default function PacksPage() {
               YOU MAY ALSO LIKE
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 max-w-7xl mx-auto">
-              {suggestedPacks.map((pack) => (
+              {suggestions.map((pack) => (
                 <div key={pack.id} className="group relative bg-white rounded-[40px] border-[8px] border-white shadow-2xl overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-4">
                   <Link href={`/packs`} className="flex flex-col h-full">
                     <div className="p-6 relative">
@@ -181,14 +186,14 @@ export default function PacksPage() {
                         <ShoppingBag size={18} strokeWidth={4} />
                       </div>
                       
-                      {/* Save badge */}
+                      {/* Save badge (Brutalist Square) */}
                       <div className="absolute top-8 right-8 bg-primary px-4 py-2 text-[11px] font-black uppercase tracking-widest z-20 text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        SAVE ${pack.save}
+                        SAVE ${pack.saveAmount || 0}
                       </div>
 
                       <div className="relative w-full aspect-square rounded-[30px] overflow-hidden bg-black shadow-inner">
                         <Image 
-                          src={pack.imageUrl} 
+                          src={pack.image || 'https://picsum.photos/seed/placeholder/400/400'} 
                           alt={pack.title} 
                           fill 
                           className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
@@ -200,24 +205,33 @@ export default function PacksPage() {
                     <div className="p-8 pt-0 text-center space-y-4 flex flex-col flex-grow">
                       <div className="space-y-1">
                         <h4 className="font-black text-3xl uppercase tracking-tighter leading-[0.9] text-black">
-                          {pack.title.split('|')[0]}
+                          {pack.title?.split('|')[0] || pack.title}
                         </h4>
-                        <h4 className="font-black text-3xl uppercase tracking-tighter leading-[0.9] text-black">
-                          {pack.title.split('|')[1]}
-                        </h4>
+                        {pack.title?.includes('|') && (
+                          <h4 className="font-black text-3xl uppercase tracking-tighter leading-[0.9] text-black">
+                            {pack.title.split('|')[1]}
+                          </h4>
+                        )}
                       </div>
                       <p className="text-[11px] font-black opacity-30 uppercase tracking-[0.2em] text-black">
                         {pack.category}
                       </p>
                       
                       <div className="mt-auto flex justify-center items-center gap-6 pt-6">
-                        <span className="text-6xl font-black text-blue-600 tracking-tighter">${pack.price}</span>
-                        <span className="text-5xl font-bold line-through opacity-10 text-black tracking-tighter">${pack.oldPrice}</span>
+                        <span className="text-6xl font-black text-blue-600 tracking-tighter">${pack.discountedPrice || 0}</span>
+                        <span className="text-5xl font-bold line-through opacity-10 text-black tracking-tighter">${pack.price || 0}</span>
                       </div>
                     </div>
                   </Link>
                 </div>
               ))}
+              
+              {/* Fallback empty state if no suggestions */}
+              {suggestions.length === 0 && (
+                <div className="col-span-full py-20 text-center">
+                  <p className="text-xs font-black uppercase tracking-widest opacity-20">NO OTHER PACKS FOUND IN THE VAULT</p>
+                </div>
+              )}
             </div>
           </div>
         </section>
