@@ -19,7 +19,6 @@ export default function PacksPage() {
     setMounted(true);
   }, []);
 
-  // We simulate the "main" product by fetching a specific ID from the 'products' collection.
   const productRef = useMemoFirebase(() => {
     if (!db) return null;
     return doc(db, 'products', 'basement-tapes');
@@ -41,7 +40,6 @@ export default function PacksPage() {
     );
   }
 
-  // Fallback if the product doesn't exist yet in the database
   const displayProduct = product || {
     title: "BASEMENT TAPES",
     category: "EXPERIMENTAL / INDIE SUITE",
@@ -78,11 +76,11 @@ export default function PacksPage() {
       <main className="flex-grow">
         {/* Product Detail Section */}
         <section className="flex flex-col lg:flex-row min-h-[800px]">
-          {/* Left Side: Artwork */}
-          <div className="w-full lg:w-1/2 bg-black flex items-center justify-center p-8 md:p-20 border-b lg:border-b-0 lg:border-r border-primary/20">
-            <div className="relative aspect-square w-full max-w-xl group">
-              <div className="absolute inset-0 bg-primary/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative border-4 border-white/10 p-2 bg-black/40 backdrop-blur-sm shadow-2xl overflow-hidden">
+          {/* Left Side: Artwork (Black) */}
+          <div className="w-full lg:w-1/2 bg-black flex items-center justify-center p-8 md:p-20 border-b lg:border-b-0 lg:border-r border-primary/10">
+            <div className="relative aspect-square w-full max-w-xl">
+              <div className="absolute inset-0 bg-primary/5 blur-3xl" />
+              <div className="relative border-[12px] border-white/5 p-4 bg-black shadow-2xl overflow-hidden">
                 <Image 
                   src={displayProduct.image} 
                   alt={displayProduct.title} 
@@ -97,43 +95,43 @@ export default function PacksPage() {
 
           {/* Right Side: Info (Acid Yellow) */}
           <div className="w-full lg:w-1/2 bg-primary text-black p-8 md:p-16 flex flex-col justify-center">
-            <div className="max-w-xl mx-auto lg:mx-0 space-y-8">
-              <div className="space-y-2">
-                <p className="text-xs font-black italic tracking-widest text-center lg:text-left">SONICRATE</p>
-                <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase leading-none text-blue-600 text-center lg:text-left">
+            <div className="max-w-xl mx-auto lg:mx-0 space-y-10">
+              <div className="space-y-3">
+                <p className="text-xs font-black italic tracking-widest text-center lg:text-left opacity-60">SONICRATE</p>
+                <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase leading-[0.8] text-blue-600 text-center lg:text-left">
                   "{displayProduct.title}"
                 </h1>
-                <p className="text-xl md:text-2xl font-black uppercase tracking-tight text-center lg:text-left">
+                <p className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-center lg:text-left">
                   {displayProduct.category}
                 </p>
               </div>
 
-              <div className="flex items-center justify-center lg:justify-start gap-4">
-                <span className="text-3xl font-bold line-through opacity-50">${displayProduct.price}</span>
-                <span className="text-6xl font-black text-blue-600">${displayProduct.discountedPrice}</span>
-                <div className="bg-white px-3 py-1 text-xs font-black uppercase tracking-widest border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              <div className="flex items-center justify-center lg:justify-start gap-6">
+                <span className="text-4xl font-bold line-through opacity-30">${displayProduct.price}</span>
+                <span className="text-7xl font-black text-blue-600 tracking-tighter">${displayProduct.discountedPrice}</span>
+                <div className="bg-white px-4 py-2 text-sm font-black uppercase tracking-widest border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   SAVE ${displayProduct.saveAmount}
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary">
+              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-24 text-4xl font-black italic uppercase tracking-tighter transition-all px-16 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)]">
                 ADD TO CART
               </Button>
 
               {/* Waveforms Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8 pt-4">
                 {(displayProduct.tracks || []).map((track: any, i: number) => (
-                  <div key={i} className="space-y-2">
-                    <div className="h-10 flex gap-[2px] items-center">
-                      {Array.from({ length: 15 }).map((_, j) => (
+                  <div key={i} className="space-y-3">
+                    <div className="h-12 flex gap-[3px] items-center">
+                      {Array.from({ length: 18 }).map((_, j) => (
                         <div 
                           key={j} 
-                          className="w-[2px] bg-black/60" 
-                          style={{ height: `${20 + Math.random() * 80}%` }} 
+                          className="w-[3px] bg-black/40" 
+                          style={{ height: `${15 + Math.random() * 85}%` }} 
                         />
                       ))}
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-tighter opacity-70">
+                    <p className="text-[11px] font-black uppercase tracking-tighter opacity-60">
                       '{track.name}' - {track.bpm} BPM - {track.key}
                     </p>
                   </div>
@@ -141,26 +139,26 @@ export default function PacksPage() {
               </div>
 
               {/* The Rundown */}
-              <div className="space-y-6 pt-8 border-t border-black/10">
-                <h3 className="text-3xl font-black italic tracking-tighter uppercase">{displayProduct.descTitle || "THE RUNDOWN"}</h3>
-                <p className="text-xs font-bold leading-relaxed opacity-80 uppercase">
+              <div className="space-y-8 pt-10 border-t-4 border-black/10">
+                <h3 className="text-4xl font-black italic tracking-tighter uppercase">{displayProduct.descTitle || "THE RUNDOWN"}</h3>
+                <p className="text-sm font-bold leading-relaxed opacity-80 uppercase tracking-tight">
                   {displayProduct.description}
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 text-[11px] font-black uppercase">
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>TOTAL SOUNDS:</span> <span>{displayProduct.technicalInfo?.totalSounds}</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>MELODY LOOPS:</span> <span>{displayProduct.technicalInfo?.melodyLoops}+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM LOOPS:</span> <span>{displayProduct.technicalInfo?.drumLoops}</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>PROJECT / MIX TEMPLATES:</span> <span>{displayProduct.technicalInfo?.projectMixTemplates}</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM SOUNDS:</span> <span>{displayProduct.technicalInfo?.drumSounds}+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>PERC LOOPS:</span> <span>{displayProduct.technicalInfo?.percLoops}+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM FILLS:</span> <span>{displayProduct.technicalInfo?.drumFills}+</span></div>
-                  <div className="flex justify-between border-b border-black/10 py-1"><span>DRUM MIDI:</span> <span>{displayProduct.technicalInfo?.drumMidi}+</span></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 text-[12px] font-black uppercase tracking-tight">
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>TOTAL SOUNDS:</span> <span>{displayProduct.technicalInfo?.totalSounds}</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>MELODY LOOPS:</span> <span>{displayProduct.technicalInfo?.melodyLoops}+</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>DRUM LOOPS:</span> <span>{displayProduct.technicalInfo?.drumLoops}</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>PROJECT / MIX TEMPLATES:</span> <span>{displayProduct.technicalInfo?.projectMixTemplates}</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>DRUM SOUNDS:</span> <span>{displayProduct.technicalInfo?.drumSounds}+</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>PERC LOOPS:</span> <span>{displayProduct.technicalInfo?.percLoops}+</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>DRUM FILLS:</span> <span>{displayProduct.technicalInfo?.drumFills}+</span></div>
+                  <div className="flex justify-between border-b-2 border-black/10 py-2"><span>DRUM MIDI:</span> <span>{displayProduct.technicalInfo?.drumMidi}+</span></div>
                 </div>
 
-                <p className="text-[8px] font-black text-center opacity-60 pt-4 uppercase tracking-widest">
+                <p className="text-[9px] font-black text-center opacity-40 pt-6 uppercase tracking-[0.2em] leading-relaxed">
                   ALL SOUNDS AND SAMPLES IN THIS KIT ARE ROYALTY FREE UNDER 1,000,000 STREAMS OR UNLESS MAJOR PLACEMENT.<br />
-                  ANY QUESTIONS EMAIL: TEAM@SONICRATE.COM
+                  FOR CLEARANCE OR CUSTOM PRODUCTION ENQUIRIES EMAIL: TEAM@SONICRATE.COM
                 </p>
               </div>
             </div>
@@ -168,55 +166,53 @@ export default function PacksPage() {
         </section>
 
         {/* Suggestion Section */}
-        <section className="py-24 bg-black">
+        <section className="py-32 bg-black border-t-8 border-white/5">
           <div className="container mx-auto px-4">
-            <h2 className="text-5xl md:text-8xl font-black italic tracking-tighter text-center text-primary uppercase mb-20">
+            <h2 className="text-6xl md:text-9xl font-black italic tracking-tighter text-center text-primary uppercase mb-24 drop-shadow-[0_0_15px_rgba(215,255,0,0.3)]">
               YOU MAY ALSO LIKE
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-16 max-w-7xl mx-auto">
               {suggestedPacks.map((pack) => (
-                <div key={pack.id} className="group relative bg-white rounded-[32px] border-[6px] border-white shadow-md overflow-hidden flex flex-col transition-transform hover:-translate-y-2 duration-300">
+                <div key={pack.id} className="group relative bg-white rounded-[40px] border-[8px] border-white shadow-2xl overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-4">
                   <Link href={`/packs`} className="flex flex-col h-full">
-                    {/* Image Container with Padding */}
-                    <div className="p-4 relative">
+                    <div className="p-6 relative">
                       {/* Square White Cart Icon */}
-                      <div className="absolute top-6 left-6 h-8 w-8 bg-white border border-black flex items-center justify-center text-black z-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                        <ShoppingBag size={14} strokeWidth={3} />
+                      <div className="absolute top-8 left-8 h-10 w-10 bg-white border-4 border-black flex items-center justify-center text-black z-20 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <ShoppingBag size={18} strokeWidth={4} />
                       </div>
                       
-                      {/* Save badge - Square Brutalist Styling */}
-                      <div className="absolute top-6 right-6 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest z-10 text-black border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                      {/* Save badge */}
+                      <div className="absolute top-8 right-8 bg-primary px-4 py-2 text-[11px] font-black uppercase tracking-widest z-20 text-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         SAVE ${pack.save}
                       </div>
 
-                      <div className="relative w-full aspect-square rounded-[24px] overflow-hidden shadow-sm bg-black">
+                      <div className="relative w-full aspect-square rounded-[30px] overflow-hidden bg-black shadow-inner">
                         <Image 
                           src={pack.imageUrl} 
                           alt={pack.title} 
                           fill 
-                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
                           data-ai-hint="abstract brutalist"
                         />
                       </div>
                     </div>
                     
-                    {/* Text Content */}
-                    <div className="p-6 pt-2 text-center space-y-3 flex flex-col flex-grow">
+                    <div className="p-8 pt-0 text-center space-y-4 flex flex-col flex-grow">
                       <div className="space-y-1">
-                        <h4 className="font-black text-2xl uppercase tracking-tighter leading-none text-black">
+                        <h4 className="font-black text-3xl uppercase tracking-tighter leading-[0.9] text-black">
                           {pack.title.split('|')[0]}
                         </h4>
-                        <h4 className="font-black text-2xl uppercase tracking-tighter leading-none text-black">
+                        <h4 className="font-black text-3xl uppercase tracking-tighter leading-[0.9] text-black">
                           {pack.title.split('|')[1]}
                         </h4>
                       </div>
-                      <p className="text-[10px] font-bold opacity-30 uppercase tracking-[0.2em] text-black">
+                      <p className="text-[11px] font-black opacity-30 uppercase tracking-[0.2em] text-black">
                         {pack.category}
                       </p>
                       
-                      <div className="mt-auto flex justify-center items-center gap-4 pt-4 pb-2">
-                        <span className="text-5xl font-black text-blue-600">${pack.price}</span>
-                        <span className="text-4xl font-bold line-through opacity-10 text-black">${pack.oldPrice}</span>
+                      <div className="mt-auto flex justify-center items-center gap-6 pt-6">
+                        <span className="text-6xl font-black text-blue-600 tracking-tighter">${pack.price}</span>
+                        <span className="text-5xl font-bold line-through opacity-10 text-black tracking-tighter">${pack.oldPrice}</span>
                       </div>
                     </div>
                   </Link>
@@ -227,28 +223,28 @@ export default function PacksPage() {
         </section>
 
         {/* What Matters Section */}
-        <section className="bg-primary py-16">
+        <section className="bg-primary py-24 border-t-8 border-black">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto text-black text-center">
-              <div className="space-y-2">
-                <div className="flex justify-center"><Box size={24} /></div>
-                <h4 className="font-black uppercase tracking-widest text-[10px]">INSTANT DELIVERY</h4>
-                <p className="text-[8px] font-bold opacity-60 uppercase">100% DIGITAL, INSTANT DELIVERY STRAIGHT TO YOUR INBOX</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 max-w-6xl mx-auto text-black text-center">
+              <div className="space-y-3">
+                <div className="flex justify-center"><Box size={28} /></div>
+                <h4 className="font-black uppercase tracking-widest text-[11px]">INSTANT DELIVERY</h4>
+                <p className="text-[9px] font-bold opacity-60 uppercase leading-tight">100% DIGITAL, INSTANT DELIVERY STRAIGHT TO YOUR INBOX</p>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-center"><Zap size={24} /></div>
-                <h4 className="font-black uppercase tracking-widest text-[10px]">PLUG & PLAY</h4>
-                <p className="text-[8px] font-bold opacity-60 uppercase">UNIVERSAL WAV FORMAT, COMPATIBLE WITH EVERY DAW AND SAMPLER</p>
+              <div className="space-y-3">
+                <div className="flex justify-center"><Zap size={28} /></div>
+                <h4 className="font-black uppercase tracking-widest text-[11px]">PLUG & PLAY</h4>
+                <p className="text-[9px] font-bold opacity-60 uppercase leading-tight">UNIVERSAL WAV FORMAT, COMPATIBLE WITH EVERY DAW AND SAMPLER</p>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-center"><Fingerprint size={24} /></div>
-                <h4 className="font-black uppercase tracking-widest text-[10px]">ALTERNATIVE DNA</h4>
-                <p className="text-[8px] font-bold opacity-60 uppercase">DESIGNED FOR AUTHENTIC ALTERNATIVE GRIT, NO COOKIE CUTTER SAMPLES</p>
+              <div className="space-y-3">
+                <div className="flex justify-center"><Fingerprint size={28} /></div>
+                <h4 className="font-black uppercase tracking-widest text-[11px]">ALTERNATIVE DNA</h4>
+                <p className="text-[9px] font-bold opacity-60 uppercase leading-tight">DESIGNED FOR AUTHENTIC ALTERNATIVE GRIT, NO COOKIE CUTTER SAMPLES</p>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-center"><Lock size={24} /></div>
-                <h4 className="font-black uppercase tracking-widest text-[10px]">LOCKED DOWN & SECURE</h4>
-                <p className="text-[8px] font-bold opacity-60 uppercase">WE ACCEPT ALL MAJOR PAYMENT METHODS</p>
+              <div className="space-y-3">
+                <div className="flex justify-center"><Lock size={28} /></div>
+                <h4 className="font-black uppercase tracking-widest text-[11px]">LOCKED DOWN & SECURE</h4>
+                <p className="text-[9px] font-bold opacity-60 uppercase leading-tight">WE ACCEPT ALL MAJOR PAYMENT METHODS</p>
               </div>
             </div>
           </div>
