@@ -83,13 +83,16 @@ function PacksContent() {
           {/* Left Side: Artwork */}
           <div className="w-full lg:w-1/2 bg-black flex items-center justify-center p-8 md:p-20 border-b lg:border-b-0 lg:border-r border-primary/10">
             <div className="relative aspect-square w-full max-w-xl">
-              <div className="absolute inset-0 bg-primary/5 blur-3xl opacity-50" />
-              <div className="relative border-[16px] border-white/5 p-4 bg-black shadow-2xl overflow-hidden group">
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-primary/5 blur-[120px] opacity-30" />
+              
+              {/* Image Container with explicit height/aspect for NextJS Fill Image */}
+              <div className="relative w-full h-full border-[16px] border-white/5 p-4 bg-black shadow-2xl overflow-hidden group">
                 <Image 
                   src={product.image || 'https://picsum.photos/seed/placeholder/800/800'} 
                   alt={product.title} 
                   fill
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 p-4"
                   data-ai-hint="cd jewel case"
                 />
               </div>
@@ -185,7 +188,7 @@ function PacksContent() {
                         <ShoppingBag size={22} strokeWidth={4} />
                       </div>
                       
-                      {/* Save badge */}
+                      {/* Save badge (Square) */}
                       <div className="absolute top-10 right-10 bg-primary px-5 py-2.5 text-xs font-black uppercase tracking-widest z-20 text-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
                         SAVE ${pack.saveAmount || 0}
                       </div>
