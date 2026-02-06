@@ -57,7 +57,7 @@ export default function PacksPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-white hover:text-black rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary">
+              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary">
                 ADD TO CART
               </Button>
 
@@ -124,8 +124,8 @@ export default function PacksPage() {
                   <Link href={`/packs`} className="flex flex-col h-full">
                     {/* Image Container with Padding */}
                     <div className="p-4 relative">
-                      {/* Red Dot Cart Icon */}
-                      <div className="absolute top-6 left-6 h-8 w-8 bg-[#FF0000] rounded-full flex items-center justify-center text-white z-10 shadow-sm">
+                      {/* Square White Cart Icon */}
+                      <div className="absolute top-6 left-6 h-8 w-8 bg-white border border-black flex items-center justify-center text-black z-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         <ShoppingBag size={14} strokeWidth={3} />
                       </div>
                       
