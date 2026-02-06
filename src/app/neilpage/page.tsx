@@ -1,11 +1,10 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,7 +32,6 @@ export default function AdminPage() {
 
   // Form State
   const [formData, setFormData] = useState({
-    id: '',
     title: '',
     category: '',
     image: '',
@@ -106,27 +104,56 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!db || !formData.id) {
+    if (!db) return;
+
+    if (!formData.title) {
       toast({
         variant: "destructive",
         title: "REQUIRED FIELD",
-        description: "PLEASE ENTER A DOC ID.",
+        description: "PLEASE ENTER A PRODUCT TITLE.",
       });
       return;
     }
 
     try {
-      const productRef = doc(db, 'products', formData.id);
-      await setDoc(productRef, {
+      const productData = {
         ...formData,
         tracks: tracks.filter(t => t.name),
         createdAt: serverTimestamp()
-      }, { merge: true });
+      };
+
+      // Auto-generate ID by using addDoc
+      const productsCollection = collection(db, 'products');
+      await addDoc(productsCollection, productData);
 
       toast({
         title: "PRODUCT SAVED",
-        description: `Successfully updated ${formData.title.toUpperCase() || 'PRODUCT'}`,
+        description: `SUCCESSFULLY PUBLISHED ${formData.title.toUpperCase()}`,
       });
+
+      // Optional: Clear form after success
+      setFormData({
+        title: '',
+        category: '',
+        image: '',
+        price: 0,
+        discountedPrice: 0,
+        saveAmount: 0,
+        descTitle: 'THE RUNDOWN',
+        description: '',
+        technicalInfo: {
+          totalSounds: 0,
+          drumLoops: 0,
+          drumSounds: 0,
+          drumFills: 0,
+          melodyLoops: 0,
+          projectMixTemplates: 0,
+          percLoops: 0,
+          drumMidi: 0
+        }
+      });
+      setTracks([{ name: '', bpm: '', key: '' }]);
+
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -180,16 +207,6 @@ export default function AdminPage() {
             <h2 className="text-3xl font-black italic uppercase tracking-tighter border-l-4 border-primary pl-6">01. PRODUCT IDENTITY</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-primary">DOC ID (DB REFERENCE)</label>
-                <Input 
-                  name="id" 
-                  value={formData.id} 
-                  onChange={handleInputChange} 
-                  placeholder="e.g. basement-tapes"
-                  className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" 
-                />
-              </div>
-              <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">TITLE</label>
                 <Input 
                   name="title" 
@@ -209,7 +226,7 @@ export default function AdminPage() {
                   className="h-16 bg-white/5 border-2 border-white/10 rounded-none text-xl font-black italic uppercase placeholder:text-white/10 focus:border-primary transition-all" 
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-primary">PRODUCT ARTWORK</label>
                 <div className="flex gap-4 items-center">
                   <div className="relative h-16 w-16 bg-white/5 border-2 border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
