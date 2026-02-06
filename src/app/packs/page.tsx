@@ -214,9 +214,9 @@ function PacksContent() {
                         {pack.category}
                       </p>
                       
-                      <div className="mt-auto flex justify-center items-center gap-8 border-t-2 border-black/5 pt-8">
-                        <span className="text-7xl font-black text-blue-600 tracking-tighter">${pack.discountedPrice || 0}</span>
-                        <span className="text-5xl font-bold line-through opacity-10 text-black tracking-tighter">${pack.price || 0}</span>
+                      <div className="mt-auto flex justify-center items-end gap-6 border-t-2 border-black/5 pt-8">
+                        <span className="text-7xl font-black text-blue-600 tracking-tighter leading-none">${pack.discountedPrice || 0}</span>
+                        <span className="text-2xl font-bold line-through opacity-10 text-black tracking-tighter mb-2">${pack.price || 0}</span>
                       </div>
                     </div>
                   </Link>
