@@ -57,7 +57,7 @@ export default function PacksPage() {
                 </div>
               </div>
 
-              <Button className="w-full bg-black text-primary hover:bg-black/90 rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary/30">
+              <Button className="w-full bg-black text-primary hover:bg-white hover:text-black rounded-none h-20 text-3xl font-black italic uppercase tracking-tighter transition-all px-16 border border-primary">
                 ADD TO CART
               </Button>
 
@@ -129,8 +129,8 @@ export default function PacksPage() {
                         <ShoppingBag size={14} strokeWidth={3} />
                       </div>
                       
-                      {/* Save badge - Pill Shaped */}
-                      <div className="absolute top-6 right-6 bg-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest z-10 shadow-sm text-black">
+                      {/* Save badge - Square Brutalist Styling */}
+                      <div className="absolute top-6 right-6 bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest z-10 text-black border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         SAVE ${pack.save}
                       </div>
 
